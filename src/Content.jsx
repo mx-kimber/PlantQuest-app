@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { PlantsIndex } from "./PlantsIndex";
 import { Signup } from "./Signup";
 import { Login } from "./Login"
+import { LogoutLink } from "./LogoutLink";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -21,6 +22,7 @@ export function Content() {
     <div>
       <h1>Welcome to PlantQuest!</h1>
       <Login />
+      <LogoutLink />
       <Signup />
       <PlantsIndex plants={plants} />
     </div>
