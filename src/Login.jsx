@@ -1,17 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 
-export function Signup() {
+export function Login() {
   const [errors, setErrors] = useState([]);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [password_digest, setPasswordDigest] = useState("");
-
-  let nameBlankMessage;
-  if (name.trim() === "") {
-    nameBlankMessage = <small id="error_style">*</small>;
-  }
 
   let emailBlankMessage;
   if (email.trim() === "") {
@@ -23,39 +16,34 @@ export function Signup() {
     passwordBlankMessage = <small id="error_style">*</small>;
   }
 
-  let passwordDigestBlankMessage;
-  if (password_digest.trim() === "") {
-    passwordDigestBlankMessage = <small id="error_style">*</small>;
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors([]);
     const params = new FormData(event.target);
-    axios.post("http://localhost:3000/users.json", params).then((response) => {
+    axios
+      .post("http://localhost:3000/sessions.json", params)
+      .then((response) => {
         console.log(response.data);
+        axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
+        localStorage.setItem("jwt", response.data.jwt);
         event.target.reset();
-        window.location.href = "/login"; 
+        window.location.href = "/";
       })
       .catch((error) => {
-        console.log(error.response.data.errors);
-        setErrors(error.response.data.errors);
+        console.log(error.response);
+        setErrors(["Invalid email or password"]);
       });
   };
 
   return (
-    <div id="signup">
-      <h1>Signup</h1>
+    <div id="login">
+      <h1>Login</h1>
       <ul>
         {errors.map((error) => (
           <li key={error}>{error}</li>
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
-        <div>
-          Name: <input name="name" type="text" value={name} onChange={(event) => setName(event.target.value)} />
-          {nameBlankMessage}
-        </div>
         <div>
           Email: <input name="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
           {emailBlankMessage}
@@ -64,13 +52,8 @@ export function Signup() {
           Password: <input name="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
           {passwordBlankMessage}
         </div>
-        <div>
-          Password confirmation: <input name="password_digest" type="password" value={password_digest} onChange={(event) => setPasswordDigest(event.target.value)} />
-          {passwordDigestBlankMessage}
-        </div>
-        <button type="submit">Signup</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
 }
-
