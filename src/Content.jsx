@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { PlantsIndex } from "./PlantsIndex";
+import { Signup } from "./Signup";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -18,6 +19,7 @@ export function Content() {
   return (
     <div>
       <h1>Welcome to PlantQuest!</h1>
+      <Signup />
       <PlantsIndex plants={plants} />
     </div>
   )
