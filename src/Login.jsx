@@ -1,20 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
 
+const jwt = localStorage.getItem("jwt");
+if (jwt) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+}
+
 export function Login() {
   const [errors, setErrors] = useState([]);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  let emailBlankMessage;
-  if (email.trim() === "") {
-    emailBlankMessage = <small id="error_style">*</small>;
-  }
-
-  let passwordBlankMessage;
-  if (password.trim() === "") {
-    passwordBlankMessage = <small id="error_style">*</small>;
-  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -44,14 +37,8 @@ export function Login() {
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
-        <div>
-          Email: <input name="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          {emailBlankMessage}
-        </div>
-        <div>
-          Password: <input name="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-          {passwordBlankMessage}
-        </div>
+        <p><b>Email:</b><br/> <input name="email" type="email" /></p>
+        <p><b>Password:</b><br/> <input name="password" type="password" /></p>
         <button type="submit">Login</button>
       </form>
     </div>
