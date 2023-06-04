@@ -23,6 +23,8 @@ export function Content() {
     axios.post("http://localhost:3000/plants.json", params).then((response) => {
       setPlants([...plants, response.data]);
       successCallback();
+      closeModal();
+      refreshIndex();
     });
   };
 
@@ -43,6 +45,8 @@ export function Content() {
         })
       );
       successCallback();
+      closeModal();
+      refreshIndex();
     });
   };
 
@@ -55,8 +59,10 @@ export function Content() {
           const { message } = response.data;
           if (message === "Plant destroyed successfully") {
             console.log("Plant deleted successfully");
-            setPlants(plants.filter((p) => p.id !== plant.id)); 
+            setPlants(plants.filter((p) => p.id !== plant.id));
             setIsPlantsShowVisible(false);
+            closeModal();
+            refreshIndex();
           } else {
             console.log("Deletion canceled");
           }
@@ -68,6 +74,14 @@ export function Content() {
   };
   
   useEffect(handleIndexPlants, []);
+
+  const closeModal = () => {
+    // Implement the code to close the modal here
+  };
+
+  const refreshIndex = () => {
+    window.location.reload(); // Refresh the index page
+  };
 
   return (
     <div>
