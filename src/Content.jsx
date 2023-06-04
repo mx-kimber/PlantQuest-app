@@ -7,11 +7,19 @@ import { LogoutLink } from "./LogoutLink";
 import { Modal } from "./Modal";
 import { PlantsNew } from "./PlantsNew";
 import { PlantsShow } from "./PlantsShow";
+import { SchedulesIndex } from "./SchedulesIndex";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
+  const [schedules, setSchedules] = useState([]);
+  const closeModal = () => {};
+  const refreshIndex = () => {
+    window.location.reload();
+  };
+
+  // PLANTS
 
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json").then((response) => {
@@ -72,16 +80,19 @@ export function Content() {
         });
     }
   };
-  
-  useEffect(handleIndexPlants, []);
 
-  const closeModal = () => {
-    // Implement the code to close the modal here
+  // SCHEDULES
+
+  const handleIndexSchedules = () => {
+    axios.get("http://localhost:3000/schedules.json").then((response) => {
+      setSchedules(response.data);
+    });
   };
 
-  const refreshIndex = () => {
-    window.location.reload(); // Refresh the index page
-  };
+  useEffect(() => {
+    handleIndexPlants();
+    handleIndexSchedules();
+  }, []);
 
   return (
     <div>
@@ -89,14 +100,17 @@ export function Content() {
       <Login />
       <LogoutLink />
       <Signup />
-
+  
       <PlantsNew onCreatePlant={handleCreatePlant} />
       <button onClick={handleIndexPlants}>All Plants</button>
       <PlantsIndex plants={plants} onShowPlant={handleShowPlant} />
-
+  
       <Modal show={isPlantsShowVisible} onClose={() => setIsPlantsShowVisible(false)}>
         <PlantsShow plant={currentPlant} onUpdatePlant={handleUpdatePlant} onDestroyPlant={handleDestroyPlant} />
       </Modal>
+  
+      <SchedulesIndex schedules={schedules} />
     </div>
   );
-}
+  }
+  
