@@ -37,6 +37,23 @@ export function Content() {
     setCurrentPlant(plant);
   };
 
+  const handleUpdatePlant = (id, params, successCallback) => {
+    console.log("handleUpdatePlant", params);
+    axios.patch(`http://localhost:3000/plants/${id}.json`, params).then((response) => {
+      setPlants(
+        plants.map((plant) => {
+          if (plant.id === response.data.id) {
+            return response.data;
+          } else {
+            return plant;
+          }
+        })
+      );
+      successCallback();
+      handleClose();
+    });
+  };
+
   const handleClose = () => {
     console.log("handleClose");
     setIsPlantsShowVisible(false);
@@ -50,12 +67,13 @@ export function Content() {
       <Login />
       <LogoutLink />
       <Signup />
+
       <PlantsNew onCreatePlant={handleCreatePlant} />
       <button onClick={handleIndexPlants}>All Plants</button>
       <PlantsIndex plants={plants} onShowPlant={handleShowPlant} />
       
       <Modal show={isPlantsShowVisible} onClose={handleClose}>
-      <PlantsShow plant={currentPlant} />
+      <PlantsShow plant={currentPlant} onUpdatePlant={handleUpdatePlant}/>
       </Modal>
     </div>
   )
