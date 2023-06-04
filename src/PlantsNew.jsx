@@ -12,16 +12,16 @@ export function PlantsNew(props) {
       <h1>New Plant</h1>
       <form onSubmit={handleSubmit}>
         <div id="plantsNew">
-          Name: <input name="name" type="text" />
+          Name: <input name="name" type="text" required />
         </div>
         <div>
-          Description: <input name="description" type="text" />
+          Description: <input name="description" type="text" required />
         </div>
         <div>
-          Amount of Sun: <input name="sun_amount" type="number" />
+          Amount of Sun: <input name="sun_amount" type="number" required />
         </div>
         <div>
-          Days to Water: <input name="days_to_water" type="number" />
+          Days to Water: <input name="days_to_water" type="number" required />
         </div>
         <button type="submit">Create plant</button>
       </form>

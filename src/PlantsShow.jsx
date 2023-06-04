@@ -5,7 +5,7 @@ export function PlantsShow(props) {
     props.onUpdatePlant(props.plant.id, params, () => event.target.reset());
   };
 
-  const handleClick = () => {
+  const handleDestroy = () => {
     props.onDestroyPlant(props.plant);
   };
 
@@ -19,24 +19,26 @@ export function PlantsShow(props) {
       <form onSubmit={handleSubmit}>
         <div id="plant.edit-form">
           <p>
-            Name: <input defaultValue={props.plant.name} name="name" type="text" />
+            Name: <input defaultValue={props.plant.name} name="name" type="text" required />
           </p>
-
+        
           <p>
-            Description: <input defaultValue={props.plant.description} name="description" type="text" />
+            Description: <input defaultValue={props.plant.description} name="description" type="text" required />
           </p>
-
+        
           <p>
-            Amount of Sun: <input defaultValue={props.plant.sun_amount} name="sun_amount" type="number" />
+            Amount of Sun: <input defaultValue={props.plant.sun_amount} name="sun_amount" type="number" required />
           </p>
-
+        
           <p>
-            Days to water: <input defaultValue={props.plant.days_to_water} name="days_to_water" type="number" />
+            Days to water: <input defaultValue={props.plant.days_to_water} name="days_to_water" type="number" required />
           </p>
         </div>
         <button type="submit">Update plant</button>
       </form>
-      <button onClick={handleClick}>Destroy plant</button>
+      <button onClick={handleDestroy}>Destroy plant</button>
     </div>
   );
 }
+
+
