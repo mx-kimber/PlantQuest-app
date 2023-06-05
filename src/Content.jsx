@@ -11,6 +11,7 @@ import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from "./SchedulesNew";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
+import { CollectedPlantsNew } from "./CollectedPlantsNew.jsx";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -20,9 +21,13 @@ export function Content() {
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
+  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
+  const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+  
 
 
   const closeModal = () => {};
+
   const refreshIndex = () => {
     window.location.reload();
   };
@@ -117,8 +122,24 @@ export function Content() {
     axios.get("http://localhost:3000/collected_plants.json").then((response) => {
       setCollectedPlants(response.data);
     });
-};
-  
+  };
+
+  const handleCreateCollectedPlant = (params, successCallback) => {
+    axios.post("http://localhost:3000/collected_plants.json", params).then((response) => {
+      setCollectedPlants([...collectedPlants, response.data]);
+      successCallback();
+      closeModal();
+      refreshIndex();
+    }).catch((error) => {
+      console.error("Error creating collected plant:", error);
+    });
+  };
+
+  const handleShowCollectedPlant = (collected) => {
+    setIsCollectedPlantsShowVisible(true);
+    setCurrentCollectedPlant(collected);
+  };
+
   useEffect(() => {
     handleIndexPlants();
     handleIndexSchedules();
@@ -131,7 +152,9 @@ export function Content() {
       <Login />
       <LogoutLink />
       <Signup />
-  
+
+  {/* // PLANTS  */}
+
       <PlantsNew onCreatePlant={handleCreatePlant} />
       <button onClick={handleIndexPlants}>All Plants</button>
       <PlantsIndex plants={plants} onShowPlant={handleShowPlant} />
@@ -139,7 +162,10 @@ export function Content() {
       <Modal show={isPlantsShowVisible} onClose={() => setIsPlantsShowVisible(false)}>
         <PlantsShow plant={currentPlant} onUpdatePlant={handleUpdatePlant} onDestroyPlant={handleDestroyPlant} />
       </Modal>
-  
+
+  {/* // SCHEDULES */}
+
+      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
       <SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} />
   
       <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
@@ -151,10 +177,26 @@ export function Content() {
           />
         )}
       </Modal>
-  
-      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
 
-      <CollectedPlantsIndex collectedPlants={collectedPlants} />
-    </div>
+  {/* // COLLECTED PLANTS */}
+
+      <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />  
+      <CollectedPlantsIndex collectedPlants={collectedPlants} onShowCollectedPlant={handleShowCollectedPlant} />
+  
+      {isCollectedPlantsShowVisible && (
+        <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
+        {currentCollectedPlant && (
+          <div>
+            <h2>Collected Plant Details</h2>
+            <p>Custom Name: {currentCollectedPlant.custom_name}</p>
+            <p>Notes: {currentCollectedPlant.notes}</p>
+            <p><img src={currentCollectedPlant.users_image} alt="Plant Image" className="plant-image" /></p>
+          </div>
+        )}
+      </Modal>
+      
+      
+      )}
+  </div>
   );
-}
+}  
