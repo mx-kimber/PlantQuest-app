@@ -231,7 +231,6 @@ export function Content() {
     }
   };
   
-  
 
   useEffect(() => {
     handleIndexPlants();
@@ -277,7 +276,11 @@ export function Content() {
 {/* // COLLECTED PLANTS */}
 
       <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />
-      <CollectedPlantsIndex collectedPlants={collectedPlants} onShowCollectedPlant={handleShowCollectedPlant} />
+      <CollectedPlantsIndex
+        collectedPlants={collectedPlants}
+        onShowCollectedPlant={handleShowCollectedPlant}
+        onDestroyCollectedPlant={handleDestroyCollectedPlant}
+      />
 
       <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
         {currentCollectedPlant && (
