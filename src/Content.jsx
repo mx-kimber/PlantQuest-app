@@ -9,6 +9,7 @@ import { PlantsNew } from "./PlantsNew";
 import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
+import { SchedulesNew } from "./SchedulesNew";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -17,6 +18,7 @@ export function Content() {
   const [schedules, setSchedules] = useState([]);
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
+
 
   const closeModal = () => {};
   const refreshIndex = () => {
@@ -93,6 +95,16 @@ export function Content() {
     });
   };
 
+  const handleCreateSchedule = (params, successCallback) => {
+    axios.post("http://localhost:3000/schedules.json", params).then((response) => {
+      setSchedules([...schedules, response.data]);
+      successCallback();
+      closeModal();
+      refreshIndex();
+    });
+  };
+  
+
   const handleShowSchedule = (schedule) => {
     setIsSchedulesShowVisible(true);
     setCurrentSchedule(schedule);
@@ -115,22 +127,23 @@ export function Content() {
       <PlantsIndex plants={plants} onShowPlant={handleShowPlant} />
   
       <Modal show={isPlantsShowVisible} onClose={() => setIsPlantsShowVisible(false)}>
-        <PlantsShow plant={currentPlant} onUpdatePlant= {handleUpdatePlant} onDestroyPlant={handleDestroyPlant}
-        />
+        <PlantsShow plant={currentPlant} onUpdatePlant={handleUpdatePlant} onDestroyPlant={handleDestroyPlant} />
       </Modal>
-      
+  
       <SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} />
-      
+  
       <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
-  {currentSchedule && (
-    <SchedulesShow
-      schedule={currentSchedule}
-      plant={currentSchedule.plant}
-      collectedPlant={currentSchedule.collectedPlant}
-    />
-  )}
-</Modal>
-
+        {currentSchedule && (
+          <SchedulesShow
+            schedule={currentSchedule}
+            plant={currentSchedule.plant}
+            collectedPlant={currentSchedule.collectedPlant}
+          />
+        )}
+      </Modal>
+  
+      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
+  
     </div>
   );
-  }
+}
