@@ -110,11 +110,54 @@ export function Content() {
       refreshIndex();
     });
   };
-  
+
+  const handleUpdateSchedule = (id, params, successCallback) => {
+    axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
+      const updatedSchedule = response.data;
+      setSchedules((prevSchedules) => {
+        const updatedSchedules = prevSchedules.map((schedule) => {
+          if (schedule.id === updatedSchedule.id) {
+            return updatedSchedule;
+          } else {
+            return schedule;
+          }
+        });
+        return updatedSchedules;
+      });
+      successCallback();
+      closeModal();
+      refreshIndex();
+    });
+  };
+    
   const handleShowSchedule = (schedule) => {
     setIsSchedulesShowVisible(true);
     setCurrentSchedule(schedule);
   };
+
+  const handleDestroySchedule = (schedule) => {
+    const confirmed = window.confirm("Are you sure you want to delete this schedule?");
+    if (confirmed) {
+      axios
+        .delete(`http://localhost:3000/schedules/${schedule.id}.json`, { params: { confirm: "true" } })
+        .then((response) => {
+          const { message } = response.data;
+          if (message === "Schedule destroyed successfully") {
+            console.log("Schedule deleted successfully");
+            setSchedules(schedules.filter((s) => s.id !== schedule.id));
+            setIsSchedulesShowVisible(false);
+            closeModal();
+            refreshIndex();
+          } else {
+            console.log("Deletion canceled");
+          }
+        })
+        .catch(() => {
+          console.log("Error occurred during deletion");
+        });
+    }
+  };
+  
 
   // COLLECTED PLANTS 
 
@@ -164,19 +207,25 @@ export function Content() {
       </Modal>
 
   {/* // SCHEDULES */}
+  <SchedulesNew onCreateSchedule={handleCreateSchedule} />
+<SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} onUpdateSchedule={handleUpdateSchedule} onDestroySchedule={handleDestroySchedule} />
 
-      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
-      <SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} />
-  
-      <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
-        {currentSchedule && (
-          <SchedulesShow
-            schedule={currentSchedule}
-            plant={currentSchedule.plant}
-            collectedPlant={currentSchedule.collectedPlant}
-          />
-        )}
-      </Modal>
+<Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
+  {currentSchedule && (
+    <SchedulesShow
+      schedule={currentSchedule}
+      onUpdateSchedule={handleUpdateSchedule}
+      onDestroySchedule={() => {
+        handleDestroySchedule(currentSchedule);
+        setIsSchedulesShowVisible(false);
+        refreshIndex();
+      }}
+    />
+  )}
+</Modal>
+
+
+
 
   {/* // COLLECTED PLANTS */}
 
