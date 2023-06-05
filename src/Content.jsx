@@ -12,6 +12,7 @@ import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from "./SchedulesNew";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsNew } from "./CollectedPlantsNew.jsx";
+import { CollectedPlantsShow } from "./CollectedPlantsShow"
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -183,6 +184,55 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
 
+  const handleUpdateCollectedPlant = (id, params, successCallback) => {
+    axios
+      .patch(`http://localhost:3000/collected_plants/${id}.json`, params)
+      .then((response) => {
+        const updatedCollectedPlant = response.data;
+        setCollectedPlants((prevCollectedPlants) => {
+          const updatedCollectedPlants = prevCollectedPlants.map((collectedPlant) => {
+            if (collectedPlant.id === updatedCollectedPlant.id) {
+              return updatedCollectedPlant;
+            } else {
+              return collectedPlant;
+            }
+          });
+          return updatedCollectedPlants;
+        });
+        successCallback();
+        closeModal();
+        refreshIndex();
+      })
+      .catch((error) => {
+        console.error("Error updating collected plant:", error);
+      });
+  };
+
+  const handleDestroyCollectedPlant = (collectedPlant) => {
+    const confirmed = window.confirm("Are you sure you want to delete this collected plant?");
+    if (confirmed) {
+      axios
+        .delete(`http://localhost:3000/collected_plants/${collectedPlant.id}.json`, { params: { confirm: "true" } })
+        .then((response) => {
+          const { message } = response.data;
+          if (message === "Collected plant destroyed successfully") {
+            console.log("Collected plant deleted successfully");
+            setCollectedPlants(collectedPlants.filter((cp) => cp.id !== collectedPlant.id));
+            setIsCollectedPlantsShowVisible(false);
+            closeModal();
+            refreshIndex();
+          } else {
+            console.log("Deletion canceled");
+          }
+        })
+        .catch(() => {
+          console.log("Error occurred during deletion");
+        });
+    }
+  };
+  
+  
+
   useEffect(() => {
     handleIndexPlants();
     handleIndexSchedules();
@@ -207,45 +257,41 @@ export function Content() {
       </Modal>
 
   {/* // SCHEDULES */}
-  <SchedulesNew onCreateSchedule={handleCreateSchedule} />
-<SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} onUpdateSchedule={handleUpdateSchedule} onDestroySchedule={handleDestroySchedule} />
+      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
+      <SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} onUpdateSchedule={handleUpdateSchedule} onDestroySchedule={handleDestroySchedule} />
 
-<Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
-  {currentSchedule && (
-    <SchedulesShow
-      schedule={currentSchedule}
-      onUpdateSchedule={handleUpdateSchedule}
-      onDestroySchedule={() => {
-        handleDestroySchedule(currentSchedule);
-        setIsSchedulesShowVisible(false);
-        refreshIndex();
-      }}
-    />
-  )}
-</Modal>
-
-
-
-
-  {/* // COLLECTED PLANTS */}
-
-      <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />  
-      <CollectedPlantsIndex collectedPlants={collectedPlants} onShowCollectedPlant={handleShowCollectedPlant} />
-  
-      {isCollectedPlantsShowVisible && (
-        <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
-        {currentCollectedPlant && (
-          <div>
-            <h2>Collected Plant Details</h2>
-            <p>Custom Name: {currentCollectedPlant.custom_name}</p>
-            <p>Notes: {currentCollectedPlant.notes}</p>
-            <p><img src={currentCollectedPlant.users_image} alt="Plant Image" className="plant-image" /></p>
-          </div>
+      <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
+        {currentSchedule && (
+          <SchedulesShow
+            schedule={currentSchedule}
+            onUpdateSchedule={handleUpdateSchedule}
+            onDestroySchedule={() => {
+              handleDestroySchedule(currentSchedule);
+              setIsSchedulesShowVisible(false);
+              refreshIndex();
+            }}
+          />
         )}
       </Modal>
-      
-      
-      )}
-  </div>
+
+{/* // COLLECTED PLANTS */}
+
+      <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />
+      <CollectedPlantsIndex collectedPlants={collectedPlants} onShowCollectedPlant={handleShowCollectedPlant} />
+
+      <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
+        {currentCollectedPlant && (
+          <CollectedPlantsShow
+            collectedPlant={currentCollectedPlant}
+            onUpdateCollectedPlant={handleUpdateCollectedPlant}
+            onDestroyCollectedPlant={() => {
+              handleDestroyCollectedPlant(currentCollectedPlant);
+              setIsCollectedPlantsShowVisible(false);
+              refreshIndex();
+            }}
+          />
+        )}
+      </Modal>
+    </div>
   );
 }  
