@@ -1,8 +1,15 @@
-export function CollectedPlantsNew() {
+export function CollectedPlantsNew(props) {
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const params = new FormData(event.target);
+    props.onCreateCollectedPlant(params, () => event.target.reset());
+  };
+  
   return (
     <div>
       <h1>New Collected Plant</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           User ID: <input name="user_id" type="number" required />
         </div>
@@ -22,5 +29,5 @@ export function CollectedPlantsNew() {
       </form>
     </div>
   );
-}
+  }
 
