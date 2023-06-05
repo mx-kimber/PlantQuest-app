@@ -10,6 +10,7 @@ import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from "./SchedulesNew";
+import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
@@ -18,6 +19,7 @@ export function Content() {
   const [schedules, setSchedules] = useState([]);
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
+  const [collectedPlants, setCollectedPlants] = useState([]);
 
 
   const closeModal = () => {};
@@ -104,15 +106,23 @@ export function Content() {
     });
   };
   
-
   const handleShowSchedule = (schedule) => {
     setIsSchedulesShowVisible(true);
     setCurrentSchedule(schedule);
   };
 
+  // COLLECTED PLANTS 
+
+  const handleIndexCollectedPlants = () => {
+    axios.get("http://localhost:3000/collected_plants.json").then((response) => {
+      setCollectedPlants(response.data);
+    });
+};
+  
   useEffect(() => {
     handleIndexPlants();
     handleIndexSchedules();
+    handleIndexCollectedPlants();
   }, []);
 
   return (
@@ -143,7 +153,8 @@ export function Content() {
       </Modal>
   
       <SchedulesNew onCreateSchedule={handleCreateSchedule} />
-  
+
+      <CollectedPlantsIndex collectedPlants={collectedPlants} />
     </div>
   );
 }

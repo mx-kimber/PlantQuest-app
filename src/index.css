@@ -1,3 +1,9 @@
 html {
   scroll-behavior: smooth;
 }
+
+.plant-image {
+  max-width: 200px;
+  max-height: 200px;
+}
+
