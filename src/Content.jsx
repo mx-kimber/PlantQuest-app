@@ -27,8 +27,6 @@ export function Content() {
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
-  
-
 
   const closeModal = () => {};
 
@@ -277,13 +275,8 @@ export function Content() {
       </Routes>
       
 
-  {/* // PLANTS  */}
+  {/* // MODALS  */}
 
-      {/* <PlantsNew onCreatePlant={handleCreatePlant} />
-      
-      <PlantsIndex plants={plants} 
-      onShowPlant={handleShowPlant} /> */}
-  
       <Modal show={isPlantsShowVisible} onClose={() => setIsPlantsShowVisible(false)}>
       {currentPlant && (
         <PlantsShow
@@ -304,14 +297,6 @@ export function Content() {
       </button>
     </Modal>
 
-  {/* // SCHEDULES */}
-      {/* <SchedulesNew onCreateSchedule={handleCreateSchedule} />
-
-      <SchedulesIndex schedules={schedules} 
-      onShowSchedule={handleShowSchedule} 
-      onUpdateSchedule={handleUpdateSchedule} 
-      onDestroySchedule={handleDestroySchedule} /> */}
-
       <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
         {currentSchedule && (
           <SchedulesShow
@@ -326,15 +311,7 @@ export function Content() {
         )}
       </Modal>
 
-{/* // COLLECTED PLANTS */}
 
-      {/* <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />
-
-      <CollectedPlantsIndex
-        collectedPlants={collectedPlants}
-        onShowCollectedPlant={handleShowCollectedPlant}
-        onDestroyCollectedPlant={handleDestroyCollectedPlant}
-      /> */}
 
       <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
         {currentCollectedPlant && (
