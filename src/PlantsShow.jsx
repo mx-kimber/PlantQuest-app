@@ -1,8 +1,10 @@
 export function PlantsShow(props) {
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onUpdatePlant(props.plant.id, params, () => event.target.reset());
+    props.onUpdatePlant(props.plant.id, params) 
+    window.location.href = '/plants';
   };
 
   const handleDestroy = () => {

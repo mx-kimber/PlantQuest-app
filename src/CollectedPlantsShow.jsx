@@ -4,7 +4,8 @@ export function CollectedPlantsShow(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onUpdateCollectedPlant(collectedPlant.id, params, () => event.target.reset());
+    props.onUpdateCollectedPlant(collectedPlant.id, params) 
+    window.location.href = '/collected_plants';
   };
 
   const handleDestroy = () => {

@@ -3,10 +3,10 @@ export function PlantsNew(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onCreatePlant(params, () => event.target.reset());
+    props.onCreatePlant(params)
+    window.location.href = "/plants";
   };
   
-
   return (
     <div>
       <h1>New Plant</h1>

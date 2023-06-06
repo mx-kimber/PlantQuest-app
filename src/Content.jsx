@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { PlantsIndex } from "./PlantsIndex";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
-import { LogoutLink } from "./LogoutLink";
 import { Modal } from "./Modal";
 import { PlantsNew } from "./PlantsNew";
 import { PlantsShow } from "./PlantsShow";
@@ -11,7 +10,7 @@ import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from "./SchedulesNew";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
-import { CollectedPlantsNew } from "./CollectedPlantsNew.jsx";
+import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsShow } from "./CollectedPlantsShow"
 import { Routes, Route } from "react-router-dom";
 import { About } from "./About";
@@ -20,9 +19,11 @@ export function Content() {
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
+
   const [schedules, setSchedules] = useState([]);
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
+
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
@@ -244,26 +245,72 @@ export function Content() {
     <div>
       <Routes>
       <Route path="/about" element={<About />} />
-      </Routes>
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
 
-      <h1>Welcome to PlantQuest!</h1>
-      <Login />
-      <LogoutLink />
-      <Signup />
+   {/* // PLANTS */}
+      <Route path="/plants" element={<PlantsIndex
+      plants={plants} 
+      onShowPlant={handleShowPlant}/>} />
+
+      <Route path="/plants/new" element={<PlantsNew 
+      onCreatePlant={handleCreatePlant} />} />
+      
+    {/* // COLLECTED PLANTS */}
+      <Route path="/collected_plants" element={<CollectedPlantsIndex
+      collectedPlants={collectedPlants}
+      onShowCollectedPlant={handleShowCollectedPlant}
+      onDestroyCollectedPlant={handleDestroyCollectedPlant}/>} />
+
+      <Route path="/collected_plants/new" element={<CollectedPlantsNew 
+      onCreateCollectedPlant={handleCreateCollectedPlant} />} />
+
+    {/* // SCHEDULES */}
+      <Route path ="/schedules" element={<SchedulesIndex schedules={schedules} 
+      onShowSchedule={handleShowSchedule} 
+      onUpdateSchedule={handleUpdateSchedule} 
+      onDestroySchedule={handleDestroySchedule} />} />
+      
+      <Route path="/schedules/new" element={<SchedulesNew 
+      onCreateSchedule={handleCreateSchedule} />} />
+
+      </Routes>
+      
 
   {/* // PLANTS  */}
 
-      <PlantsNew onCreatePlant={handleCreatePlant} />
-      <button onClick={handleIndexPlants}>All Plants</button>
-      <PlantsIndex plants={plants} onShowPlant={handleShowPlant} />
+      {/* <PlantsNew onCreatePlant={handleCreatePlant} />
+      
+      <PlantsIndex plants={plants} 
+      onShowPlant={handleShowPlant} /> */}
   
       <Modal show={isPlantsShowVisible} onClose={() => setIsPlantsShowVisible(false)}>
-        <PlantsShow plant={currentPlant} onUpdatePlant={handleUpdatePlant} onDestroyPlant={handleDestroyPlant} />
-      </Modal>
+      {currentPlant && (
+        <PlantsShow
+          plant={currentPlant}
+          onUpdatePlant={handleUpdatePlant}
+          onDestroyPlant={() => {
+            handleDestroyPlant(currentPlant);
+            setIsPlantsShowVisible(false);
+            refreshIndex();
+          }}
+        />
+      )}
+      <button onClick={() => {
+        handleIndexPlants();
+        setIsPlantsShowVisible(false);
+      }}>
+        All Plants
+      </button>
+    </Modal>
 
   {/* // SCHEDULES */}
-      <SchedulesNew onCreateSchedule={handleCreateSchedule} />
-      <SchedulesIndex schedules={schedules} onShowSchedule={handleShowSchedule} onUpdateSchedule={handleUpdateSchedule} onDestroySchedule={handleDestroySchedule} />
+      {/* <SchedulesNew onCreateSchedule={handleCreateSchedule} />
+
+      <SchedulesIndex schedules={schedules} 
+      onShowSchedule={handleShowSchedule} 
+      onUpdateSchedule={handleUpdateSchedule} 
+      onDestroySchedule={handleDestroySchedule} /> */}
 
       <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
         {currentSchedule && (
@@ -281,12 +328,13 @@ export function Content() {
 
 {/* // COLLECTED PLANTS */}
 
-      <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />
+      {/* <CollectedPlantsNew onCreateCollectedPlant={handleCreateCollectedPlant} />
+
       <CollectedPlantsIndex
         collectedPlants={collectedPlants}
         onShowCollectedPlant={handleShowCollectedPlant}
         onDestroyCollectedPlant={handleDestroyCollectedPlant}
-      />
+      /> */}
 
       <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
         {currentCollectedPlant && (

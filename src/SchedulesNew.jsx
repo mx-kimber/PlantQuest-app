@@ -3,7 +3,8 @@ export function SchedulesNew(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onCreateSchedule(params, () => event.target.reset());
+    props.onCreateSchedule(params)
+    window.location.href = "/schedules";
   };
 
   return (

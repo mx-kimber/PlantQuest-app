@@ -1,8 +1,10 @@
 export function SchedulesShow(props) {
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onUpdateSchedule(props.schedule.id, params, () => event.target.reset());
+    props.onUpdateSchedule(props.schedule.id, params)
+    window.location.href = '/schedules';
   };
 
   const handleDestroy = () => {

@@ -3,7 +3,8 @@ export function CollectedPlantsNew(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onCreateCollectedPlant(params, () => event.target.reset());
+    props.onCreateCollectedPlant(params) 
+    window.location.href = "/collected_plants";
   };
   
   return (
