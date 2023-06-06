@@ -20,7 +20,7 @@ export function Login() {
         axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
         event.target.reset();
-        window.location.href = "/";
+        window.location.href = "/plants";
       })
       .catch((error) => {
         console.log(error.response);
