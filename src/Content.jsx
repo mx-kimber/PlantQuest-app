@@ -4,7 +4,7 @@ import { PlantsIndex } from "./PlantsIndex";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
 import { Modal } from "./Modal";
-import { PlantsNew } from "./PlantsNew";
+// import { PlantsNew } from "./PlantsNew";
 import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
@@ -42,59 +42,60 @@ export function Content() {
     });
   };
 
-  const handleCreatePlant = (params, successCallback) => {
-    axios.post("http://localhost:3000/plants.json", params).then((response) => {
-      setPlants([...plants, response.data]);
-      successCallback();
-      closeModal();
-      refreshIndex();
-    });
-  };
+  // const handleCreatePlant = (params, successCallback) => {
+  //   axios.post("http://localhost:3000/plants.json", params).then((response) => {
+  //     setPlants([...plants, response.data]);
+  //     successCallback();
+  //     closeModal();
+  //     refreshIndex();
+  //   });
+  // };
 
   const handleShowPlant = (plant) => {
     setIsPlantsShowVisible(true);
     setCurrentPlant(plant);
   };
+  
 
-  const handleUpdatePlant = (id, params, successCallback) => {
-    axios.patch(`http://localhost:3000/plants/${id}.json`, params).then((response) => {
-      setPlants(
-        plants.map((plant) => {
-          if (plant.id === response.data.id) {
-            return response.data;
-          } else {
-            return plant;
-          }
-        })
-      );
-      successCallback();
-      closeModal();
-      refreshIndex();
-    });
-  };
+  // const handleUpdatePlant = (id, params, successCallback) => {
+  //   axios.patch(`http://localhost:3000/plants/${id}.json`, params).then((response) => {
+  //     setPlants(
+  //       plants.map((plant) => {
+  //         if (plant.id === response.data.id) {
+  //           return response.data;
+  //         } else {
+  //           return plant;
+  //         }
+  //       })
+  //     );
+  //     successCallback();
+  //     closeModal();
+  //     refreshIndex();
+  //   });
+  // };
 
-  const handleDestroyPlant = (plant) => {
-    const confirmed = window.confirm("Are you sure you want to delete this plant?");
-    if (confirmed) {
-      axios
-        .delete(`http://localhost:3000/plants/${plant.id}.json`, { params: { confirm: "true" } })
-        .then((response) => {
-          const { message } = response.data;
-          if (message === "Plant destroyed successfully") {
-            console.log("Plant deleted successfully");
-            setPlants(plants.filter((p) => p.id !== plant.id));
-            setIsPlantsShowVisible(false);
-            closeModal();
-            refreshIndex();
-          } else {
-            console.log("Deletion canceled");
-          }
-        })
-        .catch(() => {
-          console.log("Error occurred during deletion");
-        });
-    }
-  };
+  // const handleDestroyPlant = (plant) => {
+  //   const confirmed = window.confirm("Are you sure you want to delete this plant?");
+  //   if (confirmed) {
+  //     axios
+  //       .delete(`http://localhost:3000/plants/${plant.id}.json`, { params: { confirm: "true" } })
+  //       .then((response) => {
+  //         const { message } = response.data;
+  //         if (message === "Plant destroyed successfully") {
+  //           console.log("Plant deleted successfully");
+  //           setPlants(plants.filter((p) => p.id !== plant.id));
+  //           setIsPlantsShowVisible(false);
+  //           closeModal();
+  //           refreshIndex();
+  //         } else {
+  //           console.log("Deletion canceled");
+  //         }
+  //       })
+  //       .catch(() => {
+  //         console.log("Error occurred during deletion");
+  //       });
+  //   }
+  // };
 
   // SCHEDULES
 
@@ -159,6 +160,8 @@ export function Content() {
         });
     }
   };
+
+  
   
 
   // COLLECTED PLANTS 
@@ -251,8 +254,8 @@ export function Content() {
       plants={plants} 
       onShowPlant={handleShowPlant}/>} />
 
-      <Route path="/plants/new" element={<PlantsNew 
-      onCreatePlant={handleCreatePlant} />} />
+      {/* <Route path="/plants/new" element={<PlantsNew 
+      onCreatePlant={handleCreatePlant} />} /> */}
       
     {/* // COLLECTED PLANTS */}
       <Route path="/collected_plants" element={<CollectedPlantsIndex
@@ -281,12 +284,12 @@ export function Content() {
       {currentPlant && (
         <PlantsShow
           plant={currentPlant}
-          onUpdatePlant={handleUpdatePlant}
-          onDestroyPlant={() => {
-            handleDestroyPlant(currentPlant);
-            setIsPlantsShowVisible(false);
-            refreshIndex();
-          }}
+          // onUpdatePlant={handleUpdatePlant}
+          // onDestroyPlant={() => {
+          //   handleDestroyPlant(currentPlant);
+          //   setIsPlantsShowVisible(false);
+          //   refreshIndex();
+          // }}
         />
       )}
       <button onClick={() => {
