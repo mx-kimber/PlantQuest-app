@@ -13,13 +13,15 @@ export function CollectedPlantsShow(props) {
   };
 
   return (
-    <div>
-      <h2>Collected Plant Details</h2>
-      <p>Custom Name: {collectedPlant.custom_name}</p>
+    <div id="plant-collection">
+      <h1>{collectedPlant.custom_name}</h1>
+      <img src={collectedPlant.users_image} alt="Plant Image" className="plant-image" />
+      <h3>{collectedPlant.plant.name}</h3>
+      <p>Description: {collectedPlant.plant.description}</p>
+      <p>Sun Amount: {collectedPlant.plant.sun_amount}</p>
+      <p>Days between watering: {collectedPlant.schedule.days_to_water}</p>
+      <p>Watering Start Date: {collectedPlant.schedule.watering_start_date}</p>
       <p>Notes: {collectedPlant.notes}</p>
-      <p>
-        Image: <img src={collectedPlant.users_image} alt="Plant Image" className="plant-image" />
-      </p>
       <form onSubmit={handleSubmit}>
         <div id="collectedPlant.edit-form">
           <p>
@@ -32,7 +34,9 @@ export function CollectedPlantsShow(props) {
         </div>
         <button type="submit">Update collected plant</button>
       </form>
+      
       <button onClick={handleDestroy}>Destroy collected plant</button>
     </div>
   );
 }
+
