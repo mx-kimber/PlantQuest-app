@@ -33,6 +33,11 @@ export function Content(props) {
     window.location.reload();
   };
 
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
+
+  const [customName] = useState('');
+  const [usersImage] = useState(null);
+
   // PLANTS
 
   const handleIndexPlants = () => {
@@ -229,18 +234,26 @@ export function Content(props) {
     const params = {
       plant_id: plantId,
       user_id: currentUser,
+      custom_name: customName || '',
+      users_image: usersImage || ''
     };
-
+  
     axios
-    .post("http://localhost:3000/collected_plants.json", params)
+    .post('http://localhost:3000/collected_plants.json', params)
     .then(() => {
-      console.log("Plant moved to collection successfully");
-      window.location.href = "/collected_plants";
+      console.log('Plant moved to collection successfully');
+      setIsPlantsShowVisible(false); // Close the other modal
+      setIsSchedulesShowVisible(false); // Close the other modal
+      setIsCollectedPlantsShowVisible(false); // Close the other modal
+      setIsConfirmationVisible(true); // Show the confirmation modal
+      setTimeout(() => {
+        setIsConfirmationVisible(false); // Hide the confirmation modal after 3 seconds
+      }, 3000);
     })
     .catch((error) => {
-      console.error("Error moving plant to collection:", error);
+      console.error('Error moving plant to collection:', error);
     });
-  };
+};
   
 
   useEffect(() => {
@@ -321,11 +334,11 @@ export function Content(props) {
         )}
 
         <button onClick={() => {
-          handleIndexPlants();
-          setIsPlantsShowVisible(false);
-        }}>
-          All Plants
-        </button>
+  handleIndexPlants();
+  setIsConfirmationVisible(false);
+}}>
+  All Plants
+</button>
 
         <button onClick={() => 
           handleMoveToCollection(currentPlant.id, props.currentUser)}>
@@ -365,6 +378,17 @@ export function Content(props) {
           />
         )}
       </Modal>
+
+      <Modal show={isConfirmationVisible} onClose={() => setIsConfirmationVisible(false)}>
+  {currentPlant && (
+    <div>
+      <h3>Congrats! You got another plant!</h3>
+      <p>Name: {currentPlant.name}</p>
+      {/* Render any additional information or form fields here */}
+    </div>
+  )}
+</Modal>
+
     </div>
   );
 }  
