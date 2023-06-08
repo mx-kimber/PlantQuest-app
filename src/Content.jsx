@@ -30,6 +30,7 @@ export function Content(props) {
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+  
 
   const closeModal = () => {};
 
@@ -38,11 +39,10 @@ export function Content(props) {
   };
 
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
- 
 
-  // const [customName] = useState('');
-  // const [usersImage] = useState(null);
-  // const [plantNotes] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [selectedPlant, setSelectedPlant] = useState(null);
+
 
   // PLANTS
 
@@ -58,46 +58,6 @@ export function Content(props) {
   };
   
 
-  // const handleUpdatePlant = (id, params, successCallback) => {
-  //   axios.patch(`http://localhost:3000/plants/${id}.json`, params).then((response) => {
-  //     setPlants(
-  //       plants.map((plant) => {
-  //         if (plant.id === response.data.id) {
-  //           return response.data;
-  //         } else {
-  //           return plant;
-  //         }
-  //       })
-  //     );
-  //     successCallback();
-  //     closeModal();
-  //     refreshIndex();
-  //   });
-  // };
-
-  // const handleDestroyPlant = (plant) => {
-  //   const confirmed = window.confirm("Are you sure you want to delete this plant?");
-  //   if (confirmed) {
-  //     axios
-  //       .delete(`http://localhost:3000/plants/${plant.id}.json`, { params: { confirm: "true" } })
-  //       .then((response) => {
-  //         const { message } = response.data;
-  //         if (message === "Plant destroyed successfully") {
-  //           console.log("Plant deleted successfully");
-  //           setPlants(plants.filter((p) => p.id !== plant.id));
-  //           setIsPlantsShowVisible(false);
-  //           closeModal();
-  //           refreshIndex();
-  //         } else {
-  //           console.log("Deletion canceled");
-  //         }
-  //       })
-  //       .catch(() => {
-  //         console.log("Error occurred during deletion");
-  //       });
-  //   }
-  // };
-
   // SCHEDULES
 
   const handleIndexSchedules = () => {
@@ -112,15 +72,17 @@ export function Content(props) {
   
   const handleCreateSchedule = (params, successCallback) => {
     axios.post("http://localhost:3000/schedules.json", params).then((response) => {
-      const newSchedule = { ...response.data, plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name };
+      const newSchedule = {
+        ...response.data,
+        plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name
+      };
       setSchedules([...schedules, newSchedule]);
       successCallback();
-      closeModal();
+      setIsModalVisible(false);
       refreshIndex();
     });
   };
   
-
   const handleUpdateSchedule = (id, params, successCallback) => {
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
       const updatedSchedule = response.data;
@@ -135,16 +97,16 @@ export function Content(props) {
         return updatedSchedules;
       });
       successCallback();
-      closeModal();
+      setIsModalVisible(false);
       refreshIndex();
     });
   };
-    
+  
   const handleShowSchedule = (schedule) => {
     setIsSchedulesShowVisible(true);
     setCurrentSchedule(schedule);
   };
-
+  
   const handleDestroySchedule = (schedule) => {
     const confirmed = window.confirm("Are you sure you want to delete this schedule?");
     if (confirmed) {
@@ -156,7 +118,7 @@ export function Content(props) {
             console.log("Schedule deleted successfully");
             setSchedules(schedules.filter((s) => s.id !== schedule.id));
             setIsSchedulesShowVisible(false);
-            closeModal();
+            setIsModalVisible(false);
             refreshIndex();
           } else {
             console.log("Deletion canceled");
@@ -193,6 +155,7 @@ export function Content(props) {
   const handleShowCollectedPlant = (collected) => {
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
+    // setIsModalVisible(true);
   };
 
   const handleUpdateCollectedPlant = (id, params, successCallback) => {
@@ -302,10 +265,16 @@ export function Content(props) {
 
       <Route
         path="/collected_plants"
-        element={<CollectedPlantsIndex
-          collectedPlants={collectedPlants}
-          onShowCollectedPlant={handleShowCollectedPlant}
-          onDestroyCollectedPlant={handleDestroyCollectedPlant}/>
+        element={
+          <CollectedPlantsIndex
+            collectedPlants={collectedPlants}
+            onShowCollectedPlant={handleShowCollectedPlant}
+            onDestroyCollectedPlant={handleDestroyCollectedPlant}
+            onShowSchedule={handleShowSchedule}
+            onUpdateSchedule={handleUpdateSchedule}
+            onDestroySchedule={handleDestroySchedule}
+            onCreateSchedule={handleCreateSchedule}
+          />
         }
       />
 
@@ -348,12 +317,6 @@ export function Content(props) {
           />
         )}
 
-      {/* <button onClick={() => {
-        handleIndexPlants();
-        setIsConfirmationVisible(false);
-        }}> 
-        All Plants
-      </button> */}
 
       <button onClick={() => 
         handleMoveToCollection(currentPlant.id, props.currentUser)}>
@@ -379,27 +342,52 @@ export function Content(props) {
 
 
 
-      <Modal show={isCollectedPlantsShowVisible} onClose={() => 
-        setIsCollectedPlantsShowVisible(false)}>
-        {currentCollectedPlant && (
-          <CollectedPlantsShow
-            collectedPlant={currentCollectedPlant}
-            onUpdateCollectedPlant={handleUpdateCollectedPlant}
-            onDestroyCollectedPlant={() => {
-              handleDestroyCollectedPlant(currentCollectedPlant);
-              setIsCollectedPlantsShowVisible(false);
-              refreshIndex();
-            }}
-          />
-        )}
-      </Modal>
+      <Modal show={isSchedulesShowVisible} onClose={() => setIsSchedulesShowVisible(false)}>
+      {currentSchedule && (
+        <SchedulesShow
+          schedule={currentSchedule}
+          onUpdateSchedule={handleUpdateSchedule}
+          onDestroySchedule={() => {
+            handleDestroySchedule(currentSchedule);
+            setIsSchedulesShowVisible(false);
+            refreshIndex();
+          }}
+        />
+      )}
+    </Modal>
 
-      <Modal show={isConfirmationVisible} onClose={() => setIsConfirmationVisible(false)}>
+    <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
+      {currentCollectedPlant && (
+        <CollectedPlantsShow
+          collectedPlant={currentCollectedPlant}
+          onUpdateCollectedPlant={handleUpdateCollectedPlant}
+          onDestroyCollectedPlant={() => {
+            handleDestroyCollectedPlant(currentCollectedPlant);
+            setIsCollectedPlantsShowVisible(false);
+            refreshIndex();
+          }}
+          onShowSchedule={handleShowSchedule}
+          onUpdateSchedule={handleUpdateSchedule}
+          onDestroySchedule={handleDestroySchedule}
+          onCreateSchedule={handleCreateSchedule}
+        />
+      )}
+    </Modal>
+
+    <Modal show={isConfirmationVisible} onClose={() => setIsConfirmationVisible(false)}>
   {currentPlant && (
     <div>
       <h1>Congrats! You got another plant!</h1>
       <p>Name: {currentPlant.name}</p>
       {/* NOTE TO SELF: ADD PHOTO AFTER API */}
+    </div>
+  )}
+</Modal>
+
+<Modal show={isModalVisible} onClose={() => setIsModalVisible(false)}>
+  {currentCollectedPlant && (
+    <div>
+      <h1>TESTING</h1>
     </div>
   )}
 </Modal>

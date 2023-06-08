@@ -18,6 +18,7 @@ export function CollectedPlantsShow(props) {
       <h1>{collectedPlant.custom_name}</h1>
       <img src={collectedPlant.users_image} alt="Plant Image" className="plant-image" />
       <h3>{collectedPlant.plant.name}</h3>
+      <h3>{collectedPlant.plant.id}</h3>
       <p>Description: {collectedPlant.plant.description}</p>
       <p>Sun Amount: {collectedPlant.plant.sun_amount}</p>
       <p>Days between watering: {collectedPlant.schedule.days_to_water}</p>

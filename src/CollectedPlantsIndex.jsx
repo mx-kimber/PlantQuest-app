@@ -1,6 +1,37 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Modal } from './Modal';
+import { SchedulesNew } from './SchedulesNew';
+import { SchedulesShow } from './SchedulesShow';
+
 
 export function CollectedPlantsIndex(props) {
+  const [isAddScheduleModalVisible, setIsAddScheduleModalVisible] = useState(false);
+  const [isEditScheduleModalVisible, setIsEditScheduleModalVisible] = useState(false);
+  const [selectedPlant, setSelectedPlant] = useState(null);
+
+  const showEditScheduleModal = (plant) => {
+    setSelectedPlant(plant);
+    setIsEditScheduleModalVisible(true);
+  };
+
+  const showAddScheduleModal = () => {
+    setIsAddScheduleModalVisible(true);
+  };
+
+  const handleCreateSchedule = (params) => {
+    props.onCreateSchedule(params);
+    setIsAddScheduleModalVisible(false);
+  };
+
+  const handleUpdateSchedule = (scheduleId, params) => {
+    props.onUpdateSchedule(scheduleId, params);
+    setIsEditScheduleModalVisible(false);
+  };
+
+  const handleDestroySchedule = (schedule) => {
+    props.onDestroySchedule(schedule);
+  };
+
   return (
     <div id="collected-plants-index">
       <h1>Collected Plants</h1>
@@ -30,17 +61,46 @@ export function CollectedPlantsIndex(props) {
           <p>Loves {collectedPlant.plant.sun_amount} sun</p>
           <p>Notes: {collectedPlant.notes}</p>
           <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
-            Edit Information
+            Plant Settings
           </button>
-          <button onClick={() => props.onShowOriginalPlant(collectedPlant.plant)}>
-            Original Plant Information
+          <button className="modal-button" onClick={() => showEditScheduleModal(collectedPlant)}>
+            Manage Schedule
           </button>
-          <Link to="/schedules/new" className="modal-button">
-            Add Schedule
-          </Link>
+          <button className="modal-button" onClick={showAddScheduleModal}>
+            Create Schedule
+          </button>
+
+         
+          {isEditScheduleModalVisible && selectedPlant && (
+            <Modal show={isEditScheduleModalVisible} onClose={() => setIsEditScheduleModalVisible(false)}>
+              <SchedulesShow
+                schedule={selectedPlant.schedule}
+                onUpdateSchedule={handleUpdateSchedule}
+                onDestroySchedule={handleDestroySchedule}
+              />
+            </Modal>
+          )}
+
+        
+          {isAddScheduleModalVisible && (
+            <Modal show={isAddScheduleModalVisible} onClose={() => setIsAddScheduleModalVisible(false)}>
+              <SchedulesNew onCreateSchedule={handleCreateSchedule} />
+            </Modal>
+          )}
         </div>
       ))}
     </div>
   );
 }
+
+
+
+
+
+         
+
+  
+
+
+
 
