@@ -13,7 +13,6 @@ export function SchedulesShow(props) {
   return (
     <div>
       <h1>Schedule information</h1>
-      
       <p>Needs watering every <b>{props.schedule.days_to_water}</b> days.</p>
       <p>Watering Start Date: {props.schedule.watering_start_date}</p>
 
@@ -23,7 +22,7 @@ export function SchedulesShow(props) {
 
           <p>
             Days between watering:{" "}
-            <input defaultValue={props.schedule.days_to_water} name="collected_plant_id" type="number" required />
+            <input defaultValue={props.schedule.days_to_water} name="days_to_water" type="number" required />
           </p>
 
           <p>

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export function CollectedPlantsIndex(props) {
   return (
     <div id="collected-plants-index">
@@ -16,7 +18,7 @@ export function CollectedPlantsIndex(props) {
           ) : (
             <p>
               <img
-                src="https://smartgardenguide.com/wp-content/uploads/2019/10/zz-plant-stalks-falling-over-9.jpg" 
+                src="https://smartgardenguide.com/wp-content/uploads/2019/10/zz-plant-stalks-falling-over-9.jpg"
                 alt="Default Plant Image"
                 className="plant-image"
               />
@@ -33,8 +35,12 @@ export function CollectedPlantsIndex(props) {
           <button onClick={() => props.onShowOriginalPlant(collectedPlant.plant)}>
             Original Plant Information
           </button>
+          <Link to="/schedules/new" className="modal-button">
+            Add Schedule
+          </Link>
         </div>
       ))}
     </div>
   );
 }
+
