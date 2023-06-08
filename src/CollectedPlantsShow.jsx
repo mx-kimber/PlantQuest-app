@@ -16,13 +16,13 @@ export function CollectedPlantsShow(props) {
   return (
     <div id="plant-collection">
       <h1>{collectedPlant.custom_name}</h1>
-      {/* <img src={collectedPlant.users_image} alt="Plant Image" className="plant-image" /> */}
-      {/* <h3>{collectedPlant.plant.name}</h3>
+      <img src={collectedPlant.users_image} alt="Plant Image" className="plant-image" />
+      <h3>{collectedPlant.plant.name}</h3>
       <p>Description: {collectedPlant.plant.description}</p>
       <p>Sun Amount: {collectedPlant.plant.sun_amount}</p>
       <p>Days between watering: {collectedPlant.schedule.days_to_water}</p>
       <p>Watering Start Date: {collectedPlant.schedule.watering_start_date}</p>
-      <p>Notes: {collectedPlant.notes}</p> */}
+      <p>Notes: {collectedPlant.notes}</p>
       <form onSubmit={handleSubmit}>
         <div id="collectedPlant.edit-form">
           <p>

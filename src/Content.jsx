@@ -13,8 +13,12 @@ import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { Routes, Route } from "react-router-dom";
 import { About } from "./About";
+import { useNavigate } from "react-router-dom";
+
 
 export function Content(props) {
+  const navigate = useNavigate();
+
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
@@ -34,9 +38,11 @@ export function Content(props) {
   };
 
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
+ 
 
-  const [customName] = useState('');
-  const [usersImage] = useState(null);
+  // const [customName] = useState('');
+  // const [usersImage] = useState(null);
+  // const [plantNotes] = useState('');
 
   // PLANTS
 
@@ -230,30 +236,33 @@ export function Content(props) {
     }
   };
   
-  const handleMoveToCollection = (plantId, currentUser) => {
+  const handleMoveToCollection = (plantId, currentUser, customName, usersImage, plantNotes) => {
     const params = {
       plant_id: plantId,
       user_id: currentUser,
       custom_name: customName || '',
-      users_image: usersImage || ''
+      users_image: usersImage || '',
+      notes: plantNotes || '',
     };
   
     axios
-    .post('http://localhost:3000/collected_plants.json', params)
-    .then(() => {
-      console.log('Plant moved to collection successfully');
-      setIsPlantsShowVisible(false); // Close the other modal
-      setIsSchedulesShowVisible(false); // Close the other modal
-      setIsCollectedPlantsShowVisible(false); // Close the other modal
-      setIsConfirmationVisible(true); // Show the confirmation modal
-      setTimeout(() => {
-        setIsConfirmationVisible(false); // Hide the confirmation modal after 3 seconds
-      }, 3000);
-    })
-    .catch((error) => {
-      console.error('Error moving plant to collection:', error);
-    });
-};
+      .post('http://localhost:3000/collected_plants.json', params)
+      .then(() => {
+        console.log('Plant moved to collection successfully');
+        setIsPlantsShowVisible(false);
+        setIsConfirmationVisible(true);
+        setTimeout(() => {
+          setIsConfirmationVisible(false);
+          handleIndexCollectedPlants(); // Refresh the plants index page
+          navigate("/plants"); 
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error('Error moving plant to collection:', error);
+      });
+  };
+  
+  
   
 
   useEffect(() => {
@@ -333,17 +342,17 @@ export function Content(props) {
           />
         )}
 
-        <button onClick={() => {
-  handleIndexPlants();
-  setIsConfirmationVisible(false);
-}}>
-  All Plants
-</button>
+      {/* <button onClick={() => {
+        handleIndexPlants();
+        setIsConfirmationVisible(false);
+        }}> 
+        All Plants
+      </button> */}
 
-        <button onClick={() => 
-          handleMoveToCollection(currentPlant.id, props.currentUser)}>
-          Move to collection
-        </button>
+      <button onClick={() => 
+        handleMoveToCollection(currentPlant.id, props.currentUser)}>
+         Move to collection
+       </button>
       </Modal>
 
 
@@ -382,9 +391,9 @@ export function Content(props) {
       <Modal show={isConfirmationVisible} onClose={() => setIsConfirmationVisible(false)}>
   {currentPlant && (
     <div>
-      <h3>Congrats! You got another plant!</h3>
+      <h1>Congrats! You got another plant!</h1>
       <p>Name: {currentPlant.name}</p>
-      {/* Render any additional information or form fields here */}
+      {/* NOTE TO SELF: ADD PHOTO AFTER API */}
     </div>
   )}
 </Modal>
