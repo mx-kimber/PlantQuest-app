@@ -102,18 +102,24 @@ export function Content(props) {
 
   const handleIndexSchedules = () => {
     axios.get("http://localhost:3000/schedules.json").then((response) => {
-      setSchedules(response.data);
+      const updatedSchedules = response.data.map((schedule) => {
+        const plantName = schedule.collected_plant && schedule.collected_plant.plant && schedule.collected_plant.plant.name;
+        return { ...schedule, plantName };
+      });
+      setSchedules(updatedSchedules);
     });
   };
-
+  
   const handleCreateSchedule = (params, successCallback) => {
     axios.post("http://localhost:3000/schedules.json", params).then((response) => {
-      setSchedules([...schedules, response.data]);
+      const newSchedule = { ...response.data, plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name };
+      setSchedules([...schedules, newSchedule]);
       successCallback();
       closeModal();
       refreshIndex();
     });
   };
+  
 
   const handleUpdateSchedule = (id, params, successCallback) => {
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {

@@ -1,9 +1,8 @@
 export function SchedulesShow(props) {
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onUpdateSchedule(props.schedule.id, params)
+    props.onUpdateSchedule(props.schedule.id, params);
     window.location.href = '/schedules';
   };
 
@@ -14,22 +13,22 @@ export function SchedulesShow(props) {
   return (
     <div>
       <h1>Schedule information</h1>
-      <p>User ID: {props.schedule.user_id}</p>
-      <p>Collected Plant ID: {props.schedule.collected_plant_id}</p>
-      <p>Watering Start Date: {props.schedule.watering_start_date}</p>
       
+      <p>Needs watering every <b>{props.schedule.days_to_water}</b> days.</p>
+      <p>Watering Start Date: {props.schedule.watering_start_date}</p>
+
       <form onSubmit={handleSubmit}>
         <div id="schedule.edit-form">
+          <input name="user_id" type="hidden" value={props.schedule.user_id} />
+
           <p>
-            User ID: <input defaultValue={props.schedule.user_id} name="user_id" type="number" required />
+            Days between watering:{" "}
+            <input defaultValue={props.schedule.days_to_water} name="collected_plant_id" type="number" required />
           </p>
-        
+
           <p>
-            Collected Plant ID: <input defaultValue={props.schedule.collected_plant_id} name="collected_plant_id" type="number" required />
-          </p>
-        
-          <p>
-            Watering Start Date: <input defaultValue={props.schedule.watering_start_date} name="watering_start_date" type="date" required />
+            Watering Start Date:{" "}
+            <input defaultValue={props.schedule.watering_start_date} name="watering_start_date" type="date" required />
           </p>
         </div>
         <button type="submit">Update schedule</button>
@@ -38,12 +37,3 @@ export function SchedulesShow(props) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
