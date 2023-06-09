@@ -15,7 +15,6 @@ import { Routes, Route } from "react-router-dom";
 import { About } from "./About";
 import { useNavigate } from "react-router-dom";
 
-
 export function Content(props) {
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
@@ -28,11 +27,15 @@ export function Content(props) {
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
-  const closeModal = () => {};
-  const refreshIndex = () => { window.location.reload();};
+
   // TESTING GROUNDS
   // const [isModalVisible, setIsModalVisible] = useState(false);
   // const [selectedPlant, setSelectedPlant] = useState(null);
+
+  const closeModal = () => {};
+  const refreshIndex = () => {
+    window.location.reload();
+  };
 
 
   // PLANTS
@@ -98,6 +101,7 @@ export function Content(props) {
     setCurrentSchedule(schedule);
   };
   
+  
   const handleDestroySchedule = (schedule) => {
     const confirmed = window.confirm("Are you sure you want to delete this schedule?");
     if (confirmed) {
@@ -120,34 +124,37 @@ export function Content(props) {
         });
     }
   };
+  
 
   // COLLECTED PLANTS 
 
-  const handleIndexCollectedPlants = 
-  () => {
+  const handleIndexCollectedPlants = () => {
     axios.get("http://localhost:3000/collected_plants.json")
-    .then((response) => {
-      setCollectedPlants(response.data);
-    });
+      .then((response) => {
+        setCollectedPlants(response.data);
+      });
   };
+  
 
-  const handleCreateCollectedPlant = 
-  (params, successCallback) => {
+  const handleCreateCollectedPlant = (params, successCallback) => {
     axios.post("http://localhost:3000/collected_plants.json", params)
-    .then((response) => {
-      setCollectedPlants([...collectedPlants, response.data]);
-      successCallback();
-      closeModal();
-      refreshIndex();
-      }).catch((error) => {console.error("Error creating collected plant:", error);
-    });
+      .then((response) => {
+        setCollectedPlants([...collectedPlants, response.data]);
+        successCallback();
+        closeModal();
+        refreshIndex();
+      })
+      .catch((error) => {
+        console.error("Error creating collected plant:", error);
+      });
   };
-
+  
   const handleShowCollectedPlant = (collected) => {
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
     // setIsModalVisible(true);
   };
+  
 
   const handleUpdateCollectedPlant = (id, params, successCallback) => {
     axios
@@ -233,6 +240,9 @@ export function Content(props) {
     handleIndexCollectedPlants();
   }, []);
 
+
+
+
   return (
     <div>
       <Routes>
@@ -240,7 +250,7 @@ export function Content(props) {
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
 
-{/* PLANTS */}
+      {/* PLANTS */}
 
       <Route
         path="/plants" element={
@@ -253,7 +263,7 @@ export function Content(props) {
       />
     
         
-{/* COLLECTED PLANTS // */}
+      {/* COLLECTED PLANTS // */}
 
       <Route
         path="/collected_plants" element={
@@ -277,7 +287,7 @@ export function Content(props) {
         }
       />
 
-{/* SCHEDULES */}
+      {/* SCHEDULES */}
 
       <Route path ="/schedules" element={
        <SchedulesIndex 
@@ -297,42 +307,43 @@ export function Content(props) {
     </Routes>
       
   
-{/* MODALS  */}
+                   {/* MODALS  */}
+
+  {/* in plants show */}
+
+    <Modal show={isPlantsShowVisible} onClose={() => 
+      setIsPlantsShowVisible(false)}>
+      {currentPlant && (
+        <PlantsShow
+          plant={currentPlant}
+        />
+      )}
+      <button onClick={() => 
+        handleMoveToCollection(currentPlant.id, props.currentUser)}>
+        Move to collection
+      </button>
+    </Modal>
+
+  
+
+    <Modal show={isSchedulesShowVisible} onClose={() => 
+      setIsSchedulesShowVisible(false)}>
+      {currentSchedule && (
+        <SchedulesShow
+          schedule={currentSchedule}
+          onUpdateSchedule={handleUpdateSchedule}
+          onDestroySchedule={() => {
+            handleDestroySchedule(currentSchedule);
+            setIsSchedulesShowVisible(false);
+            refreshIndex();
+          }}
+        />
+      )}
+    </Modal>
 
 
-      <Modal show={isPlantsShowVisible} onClose={() => 
-        setIsPlantsShowVisible(false)}>
-        {currentPlant && (
-          <PlantsShow
-            plant={currentPlant}
-          />
-        )}
-        <button onClick={() => 
-          handleMoveToCollection(currentPlant.id, props.currentUser)}>
-          Move to collection
-        </button>
-      </Modal>
-
-
-      <Modal show={isSchedulesShowVisible} onClose={() => 
-        setIsSchedulesShowVisible(false)}>
-        {currentSchedule && (
-          <SchedulesShow
-            schedule={currentSchedule}
-            onUpdateSchedule={handleUpdateSchedule}
-            onDestroySchedule={() => {
-              handleDestroySchedule(currentSchedule);
-              setIsSchedulesShowVisible(false);
-              refreshIndex();
-            }}
-          />
-        )}
-      </Modal>
-
-
-
-      <Modal show={isSchedulesShowVisible} onClose={() => 
-        setIsSchedulesShowVisible(false)}>
+    <Modal show={isSchedulesShowVisible} onClose={() => 
+      setIsSchedulesShowVisible(false)}>
       {currentSchedule && (
         <SchedulesShow
           schedule={currentSchedule}
