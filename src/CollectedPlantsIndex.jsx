@@ -1,18 +1,11 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
 import { SchedulesNew } from './SchedulesNew';
-import { SchedulesShow } from './SchedulesShow';
+// import { SchedulesShow } from './SchedulesShow';
 
 
 export function CollectedPlantsIndex(props) {
   const [isAddScheduleModalVisible, setIsAddScheduleModalVisible] = useState(false);
-  const [isEditScheduleModalVisible, setIsEditScheduleModalVisible] = useState(false);
-  const [selectedPlant, setSelectedPlant] = useState(null);
-
-  const showEditScheduleModal = (plant) => {
-    setSelectedPlant(plant);
-    setIsEditScheduleModalVisible(true);
-  };
 
   const showAddScheduleModal = () => {
     setIsAddScheduleModalVisible(true);
@@ -23,14 +16,14 @@ export function CollectedPlantsIndex(props) {
     setIsAddScheduleModalVisible(false);
   };
 
-  const handleUpdateSchedule = (scheduleId, params) => {
-    props.onUpdateSchedule(scheduleId, params);
-    setIsEditScheduleModalVisible(false);
-  };
+  // const handleUpdateSchedule = (scheduleId, params) => {
+  //   props.onUpdateSchedule(scheduleId, params);
+  //   setIsEditScheduleModalVisible(false);
+  // };
 
-  const handleDestroySchedule = (schedule) => {
-    props.onDestroySchedule(schedule);
-  };
+  // const handleDestroySchedule = (schedule) => {
+  //   props.onDestroySchedule(schedule);
+  // };
 
   return (
     <div id="collected-plants-index">
@@ -63,15 +56,15 @@ export function CollectedPlantsIndex(props) {
           <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
             Plant Settings
           </button>
-          <button className="modal-button" onClick={() => showEditScheduleModal(collectedPlant)}>
+          {/* <button className="modal-button" onClick={() => showEditScheduleModal(collectedPlant)}>
             Manage Schedule
-          </button>
+          </button> */}
           <button className="modal-button" onClick={showAddScheduleModal}>
             Create Schedule
           </button>
 
          
-          {isEditScheduleModalVisible && selectedPlant && (
+          {/* {isEditScheduleModalVisible && selectedPlant && (
             <Modal show={isEditScheduleModalVisible} onClose={() => setIsEditScheduleModalVisible(false)}>
               <SchedulesShow
                 schedule={selectedPlant.schedule}
@@ -79,7 +72,7 @@ export function CollectedPlantsIndex(props) {
                 onDestroySchedule={handleDestroySchedule}
               />
             </Modal>
-          )}
+          )} */}
 
         
           {isAddScheduleModalVisible && (
