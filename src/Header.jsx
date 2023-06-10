@@ -16,8 +16,8 @@ export function Header() {
   return (
     <header>
       <nav>
-        <Link to="/PlantQuest">PlantQuest</Link>
-        <Link to="/plants">Home</Link>
+        <Link to="/plant_quest">PlantQuest</Link>
+        <Link to="/plants">Plants</Link>
         <Link to="/schedules">Schedules</Link>
         <Link to="/collected_plants">myPlants</Link>
         {authenticationLinks}
