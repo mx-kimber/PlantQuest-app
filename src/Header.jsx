@@ -16,10 +16,10 @@ export function Header() {
   return (
     <header>
       <nav>
-        <Link to="/about">About</Link>
+        <Link to="/PlantQuest">PlantQuest</Link>
         <Link to="/plants">Home</Link>
         <Link to="/schedules">Schedules</Link>
-        <Link to="/collected_plants">Collected Plants</Link>
+        <Link to="/collected_plants">myPlants</Link>
         {authenticationLinks}
       </nav>
     </header>

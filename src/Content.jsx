@@ -12,7 +12,7 @@ import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { Routes, Route } from "react-router-dom";
-import { About } from "./About";
+import { PlantQuest } from "./PlantQuest";
 import { useNavigate } from "react-router-dom";
 
 export function Content(props) {
@@ -243,7 +243,7 @@ export function Content(props) {
   return (
     <div>
       <Routes>
-      <Route path="/about" element={<About />} />
+      <Route path="/plant_quest" element={<PlantQuest />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
 
