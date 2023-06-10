@@ -1,11 +1,10 @@
-
 export function CollectedPlantsShow(props) {
   const { collectedPlant } = props;
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onUpdateCollectedPlant(collectedPlant.id, params) 
+    props.onUpdateCollectedPlant(collectedPlant.id, params);
     window.location.href = '/collected_plants';
   };
 
@@ -13,34 +12,54 @@ export function CollectedPlantsShow(props) {
     props.onDestroyCollectedPlant(collectedPlant);
   };
 
+  const renderCustomName = () => {
+    if (collectedPlant.custom_name) {
+      return <h1>{collectedPlant.custom_name}</h1>;
+    } else {
+      return (
+        <div>
+          <h1>{collectedPlant.plant.name}</h1>
+          <button onClick={handleUpdateCustomName}>Update Nickname</button>
+        </div>
+      );
+    }
+  };
+
+  const handleUpdateCustomName = () => {
+    const updatedCustomName = prompt('Enter the custom name');
+    if (updatedCustomName) {
+      props.onUpdateCollectedPlant(collectedPlant.id, { custom_name: updatedCustomName })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log('Error updating custom name:', error);
+        });
+    }
+  };
+  
+
   return (
     <div id="plant-collection">
-      <h1>{collectedPlant.custom_name}</h1>
+      {renderCustomName()}
       {collectedPlant.users_image ? (
-            <p>
-              <img
-                src={collectedPlant.users_image}
-                alt="Plant Image"
-                className="plant-image"
-              />
-            </p>
-          ) : (
-            <p>
-              <img
-                src="https://smartgardenguide.com/wp-content/uploads/2019/10/zz-plant-stalks-falling-over-9.jpg"
-                alt="Default Plant Image"
-                className="plant-image"
-              />
-            </p>
-          )}
+        <p>
+          <img
+            src={collectedPlant.users_image}
+            alt="Plant Image"
+            className="plant-image"
+          />
+        </p>
+      ) : (
+        <p>
+          <img
+            src="https://smartgardenguide.com/wp-content/uploads/2019/10/zz-plant-stalks-falling-over-9.jpg"
+            alt="Default Plant Image"
+            className="plant-image"
+          />
+        </p>
+      )}
       
-      <h3>{collectedPlant.plant.name}</h3>
-      <h3>{collectedPlant.plant.id}</h3>
-      <p>Description: {collectedPlant.plant.description}</p>
-      <p>Sun Amount: {collectedPlant.plant.sun_amount}</p>
-      <p>Days between watering: {collectedPlant.schedule.days_to_water}</p>
-      <p>Watering Start Date: {collectedPlant.schedule.watering_start_date}</p>
-      <p>Notes: {collectedPlant.notes}</p>
       <form onSubmit={handleSubmit}>
         <div id="collectedPlant.edit-form">
           <p>
@@ -61,3 +80,4 @@ export function CollectedPlantsShow(props) {
     </div>
   );
 }
+

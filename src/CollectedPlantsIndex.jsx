@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
 import { SchedulesNew } from './SchedulesNew';
-// import { SchedulesShow } from './SchedulesShow';
-
 
 export function CollectedPlantsIndex(props) {
   const [isAddScheduleModalVisible, setIsAddScheduleModalVisible] = useState(false);
@@ -16,21 +14,33 @@ export function CollectedPlantsIndex(props) {
     setIsAddScheduleModalVisible(false);
   };
 
-  // const handleUpdateSchedule = (scheduleId, params) => {
-  //   props.onUpdateSchedule(scheduleId, params);
-  //   setIsEditScheduleModalVisible(false);
-  // };
-
-  // const handleDestroySchedule = (schedule) => {
-  //   props.onDestroySchedule(schedule);
-  // };
+  const handleUpdateCustomName = (collectedPlantId) => {
+    const updatedCustomName = prompt('Give your plant a custom name!');
+    if (updatedCustomName) {
+      props.onUpdateCollectedPlant(collectedPlantId, { custom_name: updatedCustomName })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+        console.log('Error updating custom name:', error);
+        });
+    }
+  };
 
   return (
     <div id="collected-plants-index">
-      <h1>Collected Plants</h1>
+      <hr />
+      <h1>Plant Collection</h1>
+      <hr />
       {props.collectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
-          <h2>{collectedPlant.custom_name}</h2>
+          
+          <h2><b>{collectedPlant.custom_name || collectedPlant.plant.name}</b></h2>
+          {!collectedPlant.custom_name && (
+            <button onClick={() => handleUpdateCustomName(collectedPlant.id)}>
+              Give your plant a nickname!
+            </button>
+          )}
           {collectedPlant.users_image ? (
             <p>
               <img
@@ -49,32 +59,21 @@ export function CollectedPlantsIndex(props) {
             </p>
           )}
           <h4>{collectedPlant.plant.name}</h4>
-          <p>Collected on {collectedPlant.created_at}</p>
-          <p>Thirsty every {collectedPlant.schedule.days_to_water} days</p>
+          
           <p>Loves {collectedPlant.plant.sun_amount} sun</p>
           <p>Notes: {collectedPlant.notes}</p>
+
           <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
             Plant Settings
           </button>
-          {/* <button className="modal-button" onClick={() => showEditScheduleModal(collectedPlant)}>
-            Manage Schedule
-          </button> */}
+
           <button className="modal-button" onClick={showAddScheduleModal}>
             Create Schedule
           </button>
+          <br />
+          <br />
+          <hr />
 
-         
-          {/* {isEditScheduleModalVisible && selectedPlant && (
-            <Modal show={isEditScheduleModalVisible} onClose={() => setIsEditScheduleModalVisible(false)}>
-              <SchedulesShow
-                schedule={selectedPlant.schedule}
-                onUpdateSchedule={handleUpdateSchedule}
-                onDestroySchedule={handleDestroySchedule}
-              />
-            </Modal>
-          )} */}
-
-        
           {isAddScheduleModalVisible && (
             <Modal show={isAddScheduleModalVisible} onClose={() => setIsAddScheduleModalVisible(false)}>
               <SchedulesNew onCreateSchedule={handleCreateSchedule} />
@@ -85,10 +84,6 @@ export function CollectedPlantsIndex(props) {
     </div>
   );
 }
-
-
-
-
 
          
 

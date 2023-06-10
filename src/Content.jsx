@@ -28,10 +28,6 @@ export function Content(props) {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
-  // TESTING GROUNDS
-  // const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [selectedPlant, setSelectedPlant] = useState(null);
-
   const closeModal = () => {};
   const refreshIndex = () => {
     window.location.reload();
@@ -72,7 +68,7 @@ export function Content(props) {
       };
       setSchedules([...schedules, newSchedule]);
       successCallback();
-      // setIsModalVisible(false);
+      
       refreshIndex();
     });
   };
@@ -91,17 +87,8 @@ export function Content(props) {
         return updatedSchedules;
       });
 
-      // if (currentCollectedPlant && currentCollectedPlant.schedule) {
-      //   if (currentCollectedPlant.schedule.id === updatedSchedule.id) {
-      //     setCurrentCollectedPlant((prevCollectedPlant) => ({
-      //       ...prevCollectedPlant,
-      //       schedule: updatedSchedule,
-      //     }));
-      //   }
-      // }
-
       successCallback();
-      // setIsModalVisible(false);
+      
       refreshIndex();
     });
   };
@@ -162,7 +149,7 @@ export function Content(props) {
   const handleShowCollectedPlant = (collected) => {
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
-    // setIsModalVisible(true);
+    
   };
   
 
@@ -305,13 +292,18 @@ export function Content(props) {
           schedules={schedules} 
           onShowSchedule={handleShowSchedule} 
           onUpdateSchedule={handleUpdateSchedule} 
-          onDestroySchedule={handleDestroySchedule} />
+          onDestroySchedule={handleDestroySchedule} 
+          onShowCollectedPlant={handleShowCollectedPlant}
+          onDestroyCollectedPlant={handleDestroyCollectedPlant}
+          onUpdateCollectedPlant={handleUpdateCollectedPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant}/>
         } 
       />
       
       <Route path="/schedules/new" element={
       <SchedulesNew 
-          onCreateSchedule={handleCreateSchedule} />
+          onCreateSchedule=
+          {handleCreateSchedule} />
         } 
       />
 
@@ -361,6 +353,7 @@ export function Content(props) {
         <CollectedPlantsShow
           collectedPlant={currentCollectedPlant}
           onUpdateCollectedPlant={handleUpdateCollectedPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant}
           onDestroyCollectedPlant={() => {
             handleDestroyCollectedPlant(currentCollectedPlant);
             setIsCollectedPlantsShowVisible(false);
@@ -386,18 +379,9 @@ export function Content(props) {
         </div>
       )}
     </Modal>
-
-{/* TESTING GROUNDS */}
-
-    {/* <Modal show={isModalVisible} onClose={() => 
-      setIsModalVisible(false)}>
-      {currentCollectedPlant && (
-        <div>
-          <h1>TESTING</h1>
-        </div>
-      )}
-    </Modal> */}
-
-    </div>
+  </div>
   );
 }  
+
+
+

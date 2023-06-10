@@ -29,7 +29,7 @@ export function PlantsIndex(props) {
           <p>Description: {plant.description}</p>
           <p>Amount of sun: {plant.sun_amount}</p>
           
-          <button onClick={() => props.onShowPlant(plant)}>More info</button>
+          <button onClick={() => props.onShowPlant(plant)}>Read more about this plant!</button>
           {/* <button onClick={() => handleMoveToCollection(plant.id, props.currentUser)}>
             Move to collection
           </button> */}

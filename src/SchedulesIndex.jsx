@@ -4,8 +4,13 @@ export function SchedulesIndex(props) {
       <h1>All Schedules</h1>
       {props.schedules.map((schedule) => (
         <div key={schedule.id}>
-          {schedule.nickname && <h1>{schedule.nickname}</h1>}
-          {schedule.collected_plant && <p>{schedule.collected_plant}</p>}
+          {schedule.collected_plant && schedule.collected_plant.plant && (
+            <div>
+              <h3>
+                {schedule.collected_plant.custom_name || schedule.collected_plant.plant.name}
+              </h3>
+            </div>
+          )}
           <p>Days to water: {schedule.days_to_water}</p>
           <p>Watering Start Date: {schedule.watering_start_date}</p>
           
