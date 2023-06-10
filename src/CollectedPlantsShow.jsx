@@ -4,11 +4,13 @@ export function CollectedPlantsShow(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
+    console.log('handleSubmit params:', params);
     props.onUpdateCollectedPlant(collectedPlant.id, params);
     window.location.href = '/collected_plants';
   };
 
   const handleDestroy = () => {
+    console.log('collectedPlant:', collectedPlant);
     props.onDestroyCollectedPlant(collectedPlant);
   };
 

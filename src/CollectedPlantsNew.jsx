@@ -1,10 +1,10 @@
 export function CollectedPlantsNew(props) {
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
-    props.onCreateCollectedPlant(params) 
-    window.location.href = "/collected_plants";
+    console.log('handleSubmit params:', params);
+    props.onCreateCollectedPlant(params);
+    window.location.href = '/collected_plants';
   };
   
   return (
@@ -30,5 +30,5 @@ export function CollectedPlantsNew(props) {
       </form>
     </div>
   );
-  }
+}
 

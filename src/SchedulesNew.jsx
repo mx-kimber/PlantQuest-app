@@ -3,6 +3,7 @@ export function SchedulesNew(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
+    console.log('handleSubmit params:', params);
     props.onCreateSchedule(params)
     window.location.href = "/schedules";
   };

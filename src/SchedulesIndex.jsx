@@ -1,4 +1,5 @@
 export function SchedulesIndex(props) {
+  console.log('props:', props);
   return (
     <div id="schedules-index">
       <h1>All Schedules</h1>

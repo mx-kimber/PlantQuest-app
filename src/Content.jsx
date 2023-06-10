@@ -30,6 +30,7 @@ export function Content(props) {
 
   const closeModal = () => {};
   const refreshIndex = () => {
+    console.log("Refreshing index");
     window.location.reload();
   };
 
@@ -37,12 +38,14 @@ export function Content(props) {
   // PLANTS
 
   const handleIndexPlants = () => {
+    console.log("Handling index plants");
     axios.get("http://localhost:3000/plants.json").then((response) => {
       setPlants(response.data);
     });
   };
 
   const handleShowPlant = (plant) => {
+    console.log("Handling show plant");
     setIsPlantsShowVisible(true);
     setCurrentPlant(plant);
   };
@@ -51,6 +54,7 @@ export function Content(props) {
   // SCHEDULES
 
   const handleIndexSchedules = () => {
+    console.log("Handling index schedules");
     axios.get("http://localhost:3000/schedules.json").then((response) => {
       const updatedSchedules = response.data.map((schedule) => {
         const plantName = schedule.collected_plant && schedule.collected_plant.plant && schedule.collected_plant.plant.name;
@@ -61,15 +65,21 @@ export function Content(props) {
   };
   
   const handleCreateSchedule = (params, successCallback) => {
-    axios.post("http://localhost:3000/schedules.json", params).then((response) => {
-      const newSchedule = {
-        ...response.data,
-        plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name
-      };
-      setSchedules([...schedules, newSchedule]);
-      successCallback();
-      
-      refreshIndex();
+    console.log(params);
+    axios.post("http://localhost:3000/schedules.json", params)
+      .then((response) => {
+        const newSchedule = {
+          ...response.data,
+          plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name
+        };
+        setSchedules([...schedules, newSchedule]);
+        successCallback();
+        refreshIndex();
+        console.log("Handled create schedule");
+      })
+    .catch((error) => {
+      console.error("Error creating schedule:", error);
+      throw error;
     });
   };
   
@@ -90,16 +100,24 @@ export function Content(props) {
       successCallback();
       
       refreshIndex();
+      console.log("Handled update schedule");
+    })
+    .catch((error) => {
+      console.error("Error updating schedule:", error);
+    
+      throw error;
     });
   };
   
   const handleShowSchedule = (schedule) => {
+    console.log("Handling show schedule");
     setIsSchedulesShowVisible(true);
     setCurrentSchedule(schedule);
   };
   
   
   const handleDestroySchedule = (schedule) => {
+    console.log("Deleting schedule:", schedule);
     const confirmed = window.confirm("Are you sure you want to delete this schedule?");
     if (confirmed) {
       axios
@@ -126,6 +144,7 @@ export function Content(props) {
   // COLLECTED PLANTS 
 
   const handleIndexCollectedPlants = () => {
+    console.log("Fetching collected plants");
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         setCollectedPlants(response.data);
@@ -133,11 +152,11 @@ export function Content(props) {
   };
   
 
-  const handleCreateCollectedPlant = (params, successCallback) => {
+  const handleCreateCollectedPlant = (params) => {
+    console.log(params);
     axios.post("http://localhost:3000/collected_plants.json", params)
       .then((response) => {
         setCollectedPlants([...collectedPlants, response.data]);
-        successCallback();
         closeModal();
         refreshIndex();
       })
@@ -147,6 +166,7 @@ export function Content(props) {
   };
   
   const handleShowCollectedPlant = (collected) => {
+    console.log("Showing collected plant:", collected);
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
     
@@ -154,6 +174,7 @@ export function Content(props) {
   
 
   const handleUpdateCollectedPlant = (id, params, successCallback) => {
+    console.log("Updating collected plant...");
     axios
       .patch(`http://localhost:3000/collected_plants/${id}.json`, params)
       .then((response) => {
@@ -181,6 +202,7 @@ export function Content(props) {
   const handleDestroyCollectedPlant = (collectedPlant) => {
     const confirmed = window.confirm("Are you sure you want to delete this collected plant?");
     if (confirmed) {
+      console.log("Deleting collected plant...");
       axios
       .delete(`http://localhost:3000/collected_plants/${collectedPlant.id}.json`, { params: { confirm: "true" } })
       .then((response) => {
@@ -204,6 +226,7 @@ export function Content(props) {
   
 
   const handleMoveToCollection = (plantId, currentUser, customName, usersImage, plantNotes) => {
+    console.log("Moving plant to collection...");
     // note to self: add to after API integration
     const params = {
       plant_id: plantId,
@@ -279,33 +302,80 @@ export function Content(props) {
       />
 
       <Route
-        path="/collected_plants/new"element={
+        path="/collected_plants/new" element={
         <CollectedPlantsNew 
           onCreateCollectedPlant={handleCreateCollectedPlant} />
         }
       />
 
+
+
       {/* SCHEDULES */}
 
-      <Route path ="/schedules" element={
-       <SchedulesIndex 
-          schedules={schedules} 
-          onShowSchedule={handleShowSchedule} 
-          onUpdateSchedule={handleUpdateSchedule} 
-          onDestroySchedule={handleDestroySchedule} 
-          onShowCollectedPlant={handleShowCollectedPlant}
-          onDestroyCollectedPlant={handleDestroyCollectedPlant}
-          onUpdateCollectedPlant={handleUpdateCollectedPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant}/>
-        } 
+      <Route
+        path="/schedules"
+        element={
+          <SchedulesIndex
+            schedules={schedules}
+            onShowSchedule={(schedule) => {
+              handleShowSchedule(schedule);
+              console.log("Handled show schedule");
+              
+            }}
+            onUpdateSchedule={(id, params) => {
+              handleUpdateSchedule(id, params, () => {
+                console.log("Handled update schedule");
+                
+              });
+            }}
+            onDestroySchedule={(id) => {
+              handleDestroySchedule(id, () => {
+                console.log("Handled destroy schedule");
+                
+              });
+            }}
+            onShowCollectedPlant={(collectedPlant) => {
+              handleShowCollectedPlant(collectedPlant);
+              console.log("Handled show collected plant");
+              
+            }}
+            onDestroyCollectedPlant={(id) => {
+              handleDestroyCollectedPlant(id, () => {
+                console.log("Handled destroy collected plant");
+                
+              });
+            }}
+            onUpdateCollectedPlant={(id, params) => {
+              handleUpdateCollectedPlant(id, params, () => {
+                console.log("Handled update collected plant");
+                
+              });
+            }}
+            onCreateCollectedPlant={(params) => {
+              handleCreateCollectedPlant(params, () => {
+                console.log("Handled create collected plant");
+                
+              });
+            }}
+          />
+        }
       />
+
       
-      <Route path="/schedules/new" element={
-      <SchedulesNew 
-          onCreateSchedule=
-          {handleCreateSchedule} />
-        } 
-      />
+      <Route 
+       path="/schedules/new"               element={
+        <SchedulesNew
+          onCreateSchedule={(params, user_id, collected_plant_id) => {
+            handleCreateSchedule(params, () => {
+              console.log("Handled create schedule");
+              
+            }, user_id, collected_plant_id);
+          }}
+          currentCollectedPlant={currentCollectedPlant}
+          currentUser={props.currentUser}
+        />
+      }
+    />
 
     </Routes>
       
@@ -314,30 +384,53 @@ export function Content(props) {
 
   {/* in plants show */}
 
-    <Modal show={isPlantsShowVisible} onClose={() => 
-      setIsPlantsShowVisible(false)}>
-      {currentPlant && (
-        <PlantsShow
-          plant={currentPlant}
-        />
-      )}
-      <button onClick={() => 
-        handleMoveToCollection(currentPlant.id, props.currentUser)}>
-        Move to collection
-      </button>
-    </Modal>
+  <Modal
+  show={isPlantsShowVisible}
+  onClose={() => setIsPlantsShowVisible(false)}
+>
+  {currentPlant && (
+    <PlantsShow
+      plant={currentPlant}
+    />
+  )}
+  <button
+    onClick={() => {
+      handleMoveToCollection(currentPlant.id, props.currentUser);
+      console.log("Handled move to collection");
+      
+    }}
+  >
+    Move to collection
+  </button>
+</Modal>
+
 
   
 
-    <Modal show={isSchedulesShowVisible} onClose={() => 
-      setIsSchedulesShowVisible(false)}>
+    <Modal
+      show={isSchedulesShowVisible}
+      onClose={() => setIsSchedulesShowVisible(false)}
+    >
       {currentSchedule && (
         <SchedulesShow
           schedule={currentSchedule}
-          onUpdateSchedule={handleUpdateSchedule}
-          onCreateSchedule={handleCreateSchedule}
+          onUpdateSchedule={(id, params) => {
+            handleUpdateSchedule(id, params, () => {
+              console.log("Handled update schedule");
+              
+            });
+          }}
+          onCreateSchedule={(params, user_id, collected_plant_id) => {
+            handleCreateSchedule(params, () => {
+              console.log("Handled create schedule");
+              
+            }, user_id, collected_plant_id);
+          }}
           onDestroySchedule={() => {
-            handleDestroySchedule(currentSchedule);
+            handleDestroySchedule(currentSchedule, () => {
+              console.log("Handled destroy schedule");
+              
+            });
             setIsSchedulesShowVisible(false);
             refreshIndex();
           }}
@@ -347,22 +440,48 @@ export function Content(props) {
 
 
 
-    <Modal show={isCollectedPlantsShowVisible} onClose={() => 
-      setIsCollectedPlantsShowVisible(false)}>
+    <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
       {currentCollectedPlant && (
         <CollectedPlantsShow
           collectedPlant={currentCollectedPlant}
-          onUpdateCollectedPlant={handleUpdateCollectedPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant}
+          onUpdateCollectedPlant={(params) => {
+            console.log('onUpdateCollectedPlant params:', params);
+            handleUpdateCollectedPlant(params, () => {
+              console.log('Handled update collected plant');
+            });
+          }}
+          onCreateCollectedPlant={(params) => {
+            console.log('onCreateCollectedPlant params:', params);
+            handleCreateCollectedPlant(params, () => {
+              console.log('Handled create collected plant');
+              
+            });
+          }}
           onDestroyCollectedPlant={() => {
+            console.log('onDestroyCollectedPlant');
             handleDestroyCollectedPlant(currentCollectedPlant);
             setIsCollectedPlantsShowVisible(false);
             refreshIndex();
           }}
-          onShowSchedule={handleShowSchedule}
-          onUpdateSchedule={handleUpdateSchedule}
-          onDestroySchedule={handleDestroySchedule}
-          onCreateSchedule={handleCreateSchedule}
+          onShowSchedule={(schedule) => {
+            console.log('onShowSchedule schedule:', schedule);
+            handleShowSchedule(schedule);
+          }}
+          onUpdateSchedule={(id, params) => {
+            console.log('onUpdateSchedule id:', id);
+            console.log('onUpdateSchedule params:', params);
+            handleUpdateSchedule(id, params);
+          }}
+          onDestroySchedule={(schedule) => {
+            console.log('onDestroySchedule schedule:', schedule);
+            handleDestroySchedule(schedule);
+          }}
+          onCreateSchedule={(params) => {
+            console.log('onCreateSchedule params:', params);
+            handleCreateSchedule(params, () => {
+              console.log('Handled create schedule');
+            });
+          }}
         />
       )}
     </Modal>

@@ -10,6 +10,7 @@ export function CollectedPlantsIndex(props) {
   };
 
   const handleCreateSchedule = (params) => {
+    console.log('handleCreateSchedule params:', params);
     props.onCreateSchedule(params);
     setIsAddScheduleModalVisible(false);
   };
@@ -17,12 +18,13 @@ export function CollectedPlantsIndex(props) {
   const handleUpdateCustomName = (collectedPlantId) => {
     const updatedCustomName = prompt('Give your plant a custom name!');
     if (updatedCustomName) {
+      console.log('handleUpdateCustomName updatedCustomName:', updatedCustomName);
       props.onUpdateCollectedPlant(collectedPlantId, { custom_name: updatedCustomName })
         .then(() => {
           window.location.reload();
         })
         .catch((error) => {
-        console.log('Error updating custom name:', error);
+          console.log('Error updating custom name:', error);
         });
     }
   };
@@ -34,7 +36,9 @@ export function CollectedPlantsIndex(props) {
       <hr />
       {props.collectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
-          
+          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
+            Plant Settings
+          </button>
           <h2><b>{collectedPlant.custom_name || collectedPlant.plant.name}</b></h2>
           {!collectedPlant.custom_name && (
             <button onClick={() => handleUpdateCustomName(collectedPlant.id)}>
@@ -59,17 +63,13 @@ export function CollectedPlantsIndex(props) {
             </p>
           )}
           <h4>{collectedPlant.plant.name}</h4>
-          
-          <p>Loves {collectedPlant.plant.sun_amount} sun</p>
-          <p>Notes: {collectedPlant.notes}</p>
 
-          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
-            Plant Settings
-          </button>
+          <p>Loves {collectedPlant.plant.sun_amount} sun</p>
 
           <button className="modal-button" onClick={showAddScheduleModal}>
             Create Schedule
           </button>
+          <p>Notes: {collectedPlant.notes}</p>
           <br />
           <br />
           <hr />
@@ -84,6 +84,7 @@ export function CollectedPlantsIndex(props) {
     </div>
   );
 }
+
 
          
 
