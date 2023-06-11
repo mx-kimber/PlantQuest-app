@@ -243,7 +243,7 @@ export function Content(props) {
   return (
     <div>
       <Routes>
-      <Route path="/about" element={<PlantQuest />} />
+      <Route path="/plant_quest" element={<PlantQuest />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
 
