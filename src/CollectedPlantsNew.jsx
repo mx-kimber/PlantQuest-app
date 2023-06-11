@@ -26,7 +26,7 @@ export function CollectedPlantsNew(props) {
         <div>
           Users Image: <input name="users_image" type="text" required />
         </div>
-        <button type="submit">Create Collected Plant</button>
+        <button onClick="submit">Create Collected Plant</button>
       </form>
     </div>
   );
