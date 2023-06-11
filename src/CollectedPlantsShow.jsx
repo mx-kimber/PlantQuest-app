@@ -1,16 +1,16 @@
-
-
 export function CollectedPlantsShow(props) {
   const { collectedPlant } = props;
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
+    console.log('handleSubmit params:', params);
     props.onUpdateCollectedPlant(collectedPlant.id, params);
     window.location.href = '/collected_plants';
   };
 
   const handleDestroy = () => {
+    console.log('collectedPlant:', collectedPlant);
     props.onDestroyCollectedPlant(collectedPlant);
   };
 
@@ -39,7 +39,7 @@ export function CollectedPlantsShow(props) {
         });
     }
   };
-
+  
 
   return (
     <div id="plant-collection">
@@ -61,7 +61,7 @@ export function CollectedPlantsShow(props) {
           />
         </p>
       )}
-
+      
       <form onSubmit={handleSubmit}>
         <div id="collectedPlant.edit-form">
           <p>
@@ -75,7 +75,7 @@ export function CollectedPlantsShow(props) {
             Users Image: <input name="users_image" type="text" />
           </p>
         </div>
-        <button onClick="submit">Update collected plant</button>
+        <button type="submit">Update collected plant</button>
       </form>
       
       <button onClick={handleDestroy}>Destroy collected plant</button>

@@ -1,5 +1,5 @@
 export function SchedulesNew(props) {
-
+  console.log('props:', props);
   const handleSubmit = (event) => {
     event.preventDefault();
     const params = new FormData(event.target);
@@ -13,10 +13,10 @@ export function SchedulesNew(props) {
       <h1>New Schedule</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          User ID: <input name="user_id" type="number" required />
+          User ID: <input name="user_id" type="number" />
         </div>
         <div>
-          Collected Plant ID: <input name="collected_plant_id" type="number" required />
+          Collected Plant ID: <input name="collected_plant_id" type="number"/>
         </div>
         <div>
           Days between: <input name="days_to_water" type="number" required />
