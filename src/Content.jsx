@@ -28,6 +28,10 @@ export function Content(props) {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
+  // TESTING GROUNDS
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [selectedPlant, setSelectedPlant] = useState(null);
+
   const closeModal = () => {};
   const refreshIndex = () => {
     console.log("Refreshing index");
@@ -83,6 +87,7 @@ export function Content(props) {
     });
   };
   
+  
   const handleUpdateSchedule = (id, params, successCallback) => {
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
       const updatedSchedule = response.data;
@@ -96,9 +101,8 @@ export function Content(props) {
         });
         return updatedSchedules;
       });
-
       successCallback();
-      
+      // setIsModalVisible(false);
       refreshIndex();
       console.log("Handled update schedule");
     })
@@ -169,7 +173,7 @@ export function Content(props) {
     console.log("Showing collected plant:", collected);
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
-    
+    // setIsModalVisible(true);
   };
   
 
@@ -384,53 +388,29 @@ export function Content(props) {
 
   {/* in plants show */}
 
-  <Modal
-  show={isPlantsShowVisible}
-  onClose={() => setIsPlantsShowVisible(false)}
->
-  {currentPlant && (
-    <PlantsShow
-      plant={currentPlant}
-    />
-  )}
-  <button
-    onClick={() => {
-      handleMoveToCollection(currentPlant.id, props.currentUser);
-      console.log("Handled move to collection");
-      
-    }}
-  >
-    Move to collection
-  </button>
-</Modal>
-
+    <Modal show={isPlantsShowVisible} onClose={() => 
+      setIsPlantsShowVisible(false)}>
+      {currentPlant && (
+        <PlantsShow
+          plant={currentPlant}
+        />
+      )}
+      <button onClick={() => 
+        handleMoveToCollection(currentPlant.id, props.currentUser)}>
+        Move to collection
+      </button>
+    </Modal>
 
   
 
-    <Modal
-      show={isSchedulesShowVisible}
-      onClose={() => setIsSchedulesShowVisible(false)}
-    >
+    <Modal show={isSchedulesShowVisible} onClose={() => 
+      setIsSchedulesShowVisible(false)}>
       {currentSchedule && (
         <SchedulesShow
           schedule={currentSchedule}
-          onUpdateSchedule={(id, params) => {
-            handleUpdateSchedule(id, params, () => {
-              console.log("Handled update schedule");
-              
-            });
-          }}
-          onCreateSchedule={(params, user_id, collected_plant_id) => {
-            handleCreateSchedule(params, () => {
-              console.log("Handled create schedule");
-              
-            }, user_id, collected_plant_id);
-          }}
+          onUpdateSchedule={handleUpdateSchedule}
           onDestroySchedule={() => {
-            handleDestroySchedule(currentSchedule, () => {
-              console.log("Handled destroy schedule");
-              
-            });
+            handleDestroySchedule(currentSchedule);
             setIsSchedulesShowVisible(false);
             refreshIndex();
           }}
@@ -439,49 +419,22 @@ export function Content(props) {
     </Modal>
 
 
-
-    <Modal show={isCollectedPlantsShowVisible} onClose={() => setIsCollectedPlantsShowVisible(false)}>
+    <Modal show={isCollectedPlantsShowVisible} onClose={() => 
+      setIsCollectedPlantsShowVisible(false)}>
       {currentCollectedPlant && (
         <CollectedPlantsShow
           collectedPlant={currentCollectedPlant}
-          onUpdateCollectedPlant={(params) => {
-            console.log('onUpdateCollectedPlant params:', params);
-            handleUpdateCollectedPlant(params, () => {
-              console.log('Handled update collected plant');
-            });
-          }}
-          onCreateCollectedPlant={(params) => {
-            console.log('onCreateCollectedPlant params:', params);
-            handleCreateCollectedPlant(params, () => {
-              console.log('Handled create collected plant');
-              
-            });
-          }}
+          onUpdateCollectedPlant={handleUpdateCollectedPlant}
           onDestroyCollectedPlant={() => {
             console.log('onDestroyCollectedPlant');
             handleDestroyCollectedPlant(currentCollectedPlant);
             setIsCollectedPlantsShowVisible(false);
             refreshIndex();
           }}
-          onShowSchedule={(schedule) => {
-            console.log('onShowSchedule schedule:', schedule);
-            handleShowSchedule(schedule);
-          }}
-          onUpdateSchedule={(id, params) => {
-            console.log('onUpdateSchedule id:', id);
-            console.log('onUpdateSchedule params:', params);
-            handleUpdateSchedule(id, params);
-          }}
-          onDestroySchedule={(schedule) => {
-            console.log('onDestroySchedule schedule:', schedule);
-            handleDestroySchedule(schedule);
-          }}
-          onCreateSchedule={(params) => {
-            console.log('onCreateSchedule params:', params);
-            handleCreateSchedule(params, () => {
-              console.log('Handled create schedule');
-            });
-          }}
+          onShowSchedule={handleShowSchedule}
+          onUpdateSchedule={handleUpdateSchedule}
+          onDestroySchedule={handleDestroySchedule}
+          onCreateSchedule={handleCreateSchedule}
         />
       )}
     </Modal>
@@ -498,6 +451,23 @@ export function Content(props) {
         </div>
       )}
     </Modal>
-  </div>
+
+{/* TESTING GROUNDS */}
+
+    {/* <Modal show={isModalVisible} onClose={() => 
+      setIsModalVisible(false)}>
+      {currentCollectedPlant && (
+        <div>
+          <h1>TESTING</h1>
+        </div>
+      )}
+    </Modal> */}
+
+    </div>
   );
 }  
+
+
+
+
+
