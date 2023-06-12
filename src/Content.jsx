@@ -369,13 +369,12 @@ export function Content(props) {
 
       
       <Route 
-       path="/schedules/new"               element={
+        path="/schedules/new" element={
         <SchedulesNew
-          onCreateSchedule={(params, user_id, collected_plant_id) => {
+          onCreateSchedule={(params) => {
             handleCreateSchedule(params, () => {
               console.log("Handled create schedule");
-              
-            }, user_id, collected_plant_id);
+            });
           }}
           currentCollectedPlant={currentCollectedPlant}
           currentUser={props.currentUser}
