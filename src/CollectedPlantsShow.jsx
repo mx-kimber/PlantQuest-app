@@ -1,12 +1,28 @@
+import { useState, useEffect } from 'react';
+
 export function CollectedPlantsShow(props) {
-  const { collectedPlant } = props;
+  const { collectedPlant, closeModal, refreshIndex } = props;
+  const [shouldCloseModal, setShouldCloseModal] = useState(false);
+
+  useEffect(() => {
+    if (shouldCloseModal) {
+      closeModal();
+    }
+  }, [shouldCloseModal, closeModal]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const params = new FormData(event.target);
+    const formData = new FormData(event.target);
+    const params = Object.fromEntries(formData.entries());
     console.log('handleSubmit params:', params);
-    props.onUpdateCollectedPlant(collectedPlant.id, params);
-    window.location.href = '/collected_plants';
+    props.onUpdateCollectedPlant(collectedPlant.id, params)
+      .then(() => {
+        setShouldCloseModal(true); 
+        refreshIndex();
+      })
+      .catch((error) => {
+        console.log('Error updating collected plant:', error);
+      });
   };
 
   const handleDestroy = () => {
@@ -32,7 +48,8 @@ export function CollectedPlantsShow(props) {
     if (updatedCustomName) {
       props.onUpdateCollectedPlant(collectedPlant.id, { custom_name: updatedCustomName })
         .then(() => {
-          window.location.reload();
+          setShouldCloseModal(true);
+          refreshIndex();
         })
         .catch((error) => {
           console.log('Error updating custom name:', error);

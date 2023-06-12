@@ -193,7 +193,9 @@ export function Content(props) {
           });
           return updatedCollectedPlants;
         });
-        successCallback();
+        if (successCallback && typeof successCallback === 'function') {
+          successCallback();
+        }
         closeModal();
         refreshIndex();
       })
