@@ -27,7 +27,7 @@ export function Content(props) {
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
-  const [usersImage, setUsersImage] = useState("");
+ 
 
   const closeModal = () => {};
   const refreshIndex = () => {

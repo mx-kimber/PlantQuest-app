@@ -1,6 +1,35 @@
-// import axios from "axios";
+
+import Container from 'react-bootstrap/Container';
 
 export function PlantsIndex(props) {
+  return (
+    <div id="plants-index">
+      <Container className="left-nav">
+      <hr />
+      {props.plants.map((plant) => (
+        <div key={plant.id}>
+          <h2>{plant.name}</h2>
+          <p>(Latin name)</p>
+          <p><img src="https://bloody-disgusting.com/wp-content/uploads/2019/06/Little-Shop-of-Horrors-e1560782203967.jpg" className="plant-image"></img></p>
+          <p>{plant.description}</p>
+          <p>Light Tolerated | {plant.sun_amount}</p>
+          
+          <button onClick={() => props.onShowPlant(plant)}>More on this plant</button>
+          <br/>
+          <hr/>
+          
+        </div>
+      ))}
+      </Container>
+    </div>
+  );
+}
+
+
+{/* <button onClick={() => handleMoveToCollection(plant.id, props.currentUser)}>
+            Move to collection
+          </button> */}
+
   // const handleMoveToCollection = (plantId, currentUser) => {
   //   const params = {
   //     plant_id: plantId,
@@ -19,23 +48,4 @@ export function PlantsIndex(props) {
   //   });
   
   // };
-
-  return (
-    <div id="plants-index">
-      <h1>All plants</h1>
-      {props.plants.map((plant) => (
-        <div key={plant.id}>
-          <h2>{plant.name}</h2>
-          <p>Description: {plant.description}</p>
-          <p>Amount of sun: {plant.sun_amount}</p>
-          
-          <button onClick={() => props.onShowPlant(plant)}>Read more about this plant!</button>
-          {/* <button onClick={() => handleMoveToCollection(plant.id, props.currentUser)}>
-            Move to collection
-          </button> */}
-        </div>
-      ))}
-    </div>
-  );
-}
 

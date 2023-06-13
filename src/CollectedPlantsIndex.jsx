@@ -35,20 +35,17 @@ export function CollectedPlantsIndex(props) {
       <hr />
       <h1>Plant Collection</h1>
       <hr />
+      <br />
       {props.collectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
           
           <h2>
-            <b>{collectedPlant.custom_name || collectedPlant.plant.name}</b>
+            {collectedPlant.custom_name || collectedPlant.plant.name}
           </h2>
-          {!collectedPlant.custom_name && (
-            <button onClick={() => handleUpdateCustomName(collectedPlant.id)}>
-              Give your plant a nickname!
-            </button>
-          )}
-          {collectedPlant.users_image ? (
           
-              <img
+
+          {collectedPlant.users_image ? (
+             <img
                 src={collectedPlant.users_image}
                 alt="Plant Image"
                 className="plant-image"
@@ -57,23 +54,35 @@ export function CollectedPlantsIndex(props) {
           ) : (
           
               <img
-                src="https://smartgardenguide.com/wp-content/uploads/2019/10/zz-plant-stalks-falling-over-9.jpg"
+                src="https://bloody-disgusting.com/wp-content/uploads/2019/06/Little-Shop-of-Horrors-e1560782203967.jpg"
                 alt="Default Plant Image"
                 className="plant-image"
               />
             
           )}
-          <h4>{collectedPlant.plant.name}</h4>
+          <br />
+          <br />
+          <p>{!collectedPlant.custom_name && (
+           <button onClick={() => handleUpdateCustomName(collectedPlant.id)}>
+              Name your plant!
+            </button>
+          )}</p>
+          <p>Common Name: {collectedPlant.plant.name}</p>
           
+          <p>Loves {collectedPlant.plant.sun_amount} sun</p>
+          <p>Watering Schedule: <br /> {collectedPlant.schedule.watering_start_date}
+          </p>
+          
+
           <button className="modal-button" onClick={showAddScheduleModal}>
             Create Schedule
-          </button><button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
+          </button>
+          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>
             Plant Settings
           </button>
-
-          <p>Loves {collectedPlant.plant.sun_amount} sun</p>
-          <p>Notes: {collectedPlant.notes}</p>
-         
+<br />
+<br />
+<hr />
 
           {isAddScheduleModalVisible && (
             <Modal show={isAddScheduleModalVisible} onClose={() => setIsAddScheduleModalVisible(false)}>
