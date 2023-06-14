@@ -1,18 +1,22 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { PlantQuest } from "./PlantQuest";
 import { PlantsIndex } from "./PlantsIndex";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
 import { Modal } from "./Modal";
+
 import { PlantsShow } from "./PlantsShow";
+
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from "./SchedulesNew";
+
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
-import { Routes, Route } from "react-router-dom";
-import { PlantQuest } from "./PlantQuest";
+
 import { useNavigate } from "react-router-dom";
 
 export function Content(props) {
@@ -67,22 +71,30 @@ export function Content(props) {
   
   const handleCreateSchedule = (params, successCallback) => {
     console.log(params);
-    axios.post("http://localhost:3000/schedules.json", params)
+    axios
+      .post("http://localhost:3000/schedules.json", params)
       .then((response) => {
         const newSchedule = {
           ...response.data,
-          plantName: response.data.collected_plant && response.data.collected_plant.plant && response.data.collected_plant.plant.name
+          plantName:
+            response.data.collected_plant &&
+            response.data.collected_plant.plant &&
+            response.data.collected_plant.plant.name,
         };
         setSchedules([...schedules, newSchedule]);
         successCallback();
         refreshIndex();
         console.log("Handled create schedule");
+  
+        // Set the state to show the schedules modal
+        setIsSchedulesShowVisible(true);
       })
-    .catch((error) => {
-      console.error("Error creating schedule:", error);
-      throw error;
-    });
+      .catch((error) => {
+        console.error("Error creating schedule:", error);
+        throw error;
+      });
   };
+  
   
   
   const handleUpdateSchedule = (id, params, successCallback) => {
@@ -170,7 +182,6 @@ export function Content(props) {
     console.log("Showing collected plant:", collected);
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
-    // setIsModalVisible(true);
   };
   
 
@@ -270,6 +281,7 @@ export function Content(props) {
     <div>
       <Routes>
       <Route path="/plant_quest" element={<PlantQuest />} />
+      <Route path="/plant_quest" component={PlantQuest} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
 
@@ -289,20 +301,26 @@ export function Content(props) {
       {/* COLLECTED PLANTS // */}
 
       <Route
-        path="/collected_plants" element={
-          <CollectedPlantsIndex
-            collectedPlants={collectedPlants}
-            onShowCollectedPlant={handleShowCollectedPlant}
-            onDestroyCollectedPlant={handleDestroyCollectedPlant}
-            onUpdateCollectedPlant={handleUpdateCollectedPlant}
-            onCreateCollectedPlant={handleCreateCollectedPlant}
-            onShowSchedule={handleShowSchedule}
-            onUpdateSchedule={handleUpdateSchedule}
-            onDestroySchedule={handleDestroySchedule}
-            onCreateSchedule={handleCreateSchedule}
-          />
-        }
-      />
+          path="/collected_plants"
+          element={
+            <CollectedPlantsIndex
+              collectedPlants={collectedPlants}
+              
+              onShowCollectedPlant={handleShowCollectedPlant}
+              onCreateCollectedPlant={handleCreateCollectedPlant}
+              onUpdateCollectedPlant={handleUpdateCollectedPlant}
+              onDestroyCollectedPlant={handleDestroyCollectedPlant}
+
+              onShowSchedule={handleShowSchedule}
+              onUpdateSchedule={handleUpdateSchedule}
+              onDestroySchedule={handleDestroySchedule}
+              onCreateSchedule={handleCreateSchedule}>
+
+              <SchedulesNew onCreateSchedule=
+              {handleCreateSchedule} />
+            </CollectedPlantsIndex>
+          }
+        />
 
       <Route
         path="/collected_plants/new" element={
@@ -406,6 +424,7 @@ export function Content(props) {
       {currentSchedule && (
         <SchedulesShow
           schedule={currentSchedule}
+          onCreateSchedule={handleCreateSchedule}
           onUpdateSchedule={handleUpdateSchedule}
           onDestroySchedule={() => {
             handleDestroySchedule(currentSchedule);
@@ -443,12 +462,16 @@ export function Content(props) {
       setIsConfirmationVisible(false)}>
       {currentPlant && (
         <div>
-          <h1>Congrats! Your collection is growing!</h1>
+          <h1>Two green thumbs up! <br/>You collected another plant!</h1>
           <p>Name: {currentPlant.name}</p>
           {/* Note to self: Add photo after API integration - will change */}
         </div>
       )}
     </Modal>
+   </div>
+  );
+} 
+
 
 {/* TESTING GROUNDS */}
 
@@ -461,9 +484,7 @@ export function Content(props) {
       )}
     </Modal> */}
 
-    </div>
-  );
-}  
+     
 
 
 

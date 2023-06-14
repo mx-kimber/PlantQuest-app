@@ -1,26 +1,28 @@
 
-import Container from 'react-bootstrap/Container';
 
 export function PlantsIndex(props) {
   return (
     <div id="plants-index">
-      <Container className="left-nav">
-      <hr />
+      
+      
       {props.plants.map((plant) => (
         <div key={plant.id}>
           <h2>{plant.name}</h2>
-          <p>(Latin name)</p>
+          
           <p><img src="https://bloody-disgusting.com/wp-content/uploads/2019/06/Little-Shop-of-Horrors-e1560782203967.jpg" className="plant-image"></img></p>
+          
+          <div key="plant-api-index"/>
+          <p>(Latin name)</p>
           <p>{plant.description}</p>
           <p>Light Tolerated | {plant.sun_amount}</p>
           
           <button onClick={() => props.onShowPlant(plant)}>More on this plant</button>
           <br/>
-          <hr/>
+          
           
         </div>
       ))}
-      </Container>
+      
     </div>
   );
 }
