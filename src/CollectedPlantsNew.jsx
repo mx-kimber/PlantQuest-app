@@ -9,6 +9,7 @@ export function CollectedPlantsNew(props) {
   
   return (
     <div>
+      <container id="form-container">
       <h1>New Collected Plant</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -28,6 +29,7 @@ export function CollectedPlantsNew(props) {
         </div>
         <button onClick="submit">Create Collected Plant</button>
       </form>
+      </container>
     </div>
   );
 }

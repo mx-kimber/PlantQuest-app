@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
+
 const jwt = localStorage.getItem("jwt");
 if (jwt) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
@@ -29,18 +30,29 @@ export function Login() {
   };
 
   return (
-    <div id="login">
-      <h1>Login</h1>
+    <div id="login" className="form-container">
+      <h1 className="login-title">Login</h1>
       <ul>
         {errors.map((error) => (
           <li key={error}>{error}</li>
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
-        <p><b>Email:</b><br/> <input name="email" type="email" /></p>
-        <p><b>Password:</b><br/> <input name="password" type="password" /></p>
-        <button type="submit">Login</button>
+        <p>
+          <b>Email:</b>
+          <br />
+          <input name="email" type="email" className="login-input" />
+        </p>
+        <p>
+          <b>Password:</b>
+          <br />
+          <input name="password" type="password" className="login-input" />
+        </p>
+        <button type="submit" className="btn-primary">
+          Login
+        </button>
       </form>
     </div>
+
   );
 }
