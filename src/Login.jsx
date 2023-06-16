@@ -32,6 +32,7 @@ export function Login() {
   return (
     <div id="login" className="form-container">
       <h1 className="login-title">Login</h1>
+      <img src="https://media.istockphoto.com/id/1045368942/vector/abstract-green-leaf-logo-icon-vector-design-ecology-icon-set-eco-icon.jpg?s=612x612&w=0&k=20&c=XIfHMI8r1G73blCpCBFmLIxCtOLx8qX0O3mZC9csRLs=" alt="Brand Photo" className="m-brand-photo" />
       <ul>
         {errors.map((error) => (
           <li key={error}>{error}</li>

@@ -23,7 +23,7 @@ export function CollectedPlantsIndex(props) {
     return (
       <div id="collected-plants-index">
         <hr />
-        <h1>Plant Collection</h1>
+        <h1>myPlant Collection</h1>
         <hr />
         <br />
         {props.collectedPlants.map((collectedPlant) => (

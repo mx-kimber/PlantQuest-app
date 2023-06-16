@@ -3,7 +3,7 @@ export function SchedulesIndex(props) {
   return (
     <div id="schedules-index">
       <hr />
-      <h1>All Schedules</h1>
+      <h1>Schedules</h1>
       <hr />
       <br />
       {props.schedules.map((schedule) => (
